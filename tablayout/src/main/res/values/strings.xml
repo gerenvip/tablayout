@@ -1,0 +1,11 @@
+<resources xmlns:ns1="http://schemas.android.com/apk/res-auto">
+    <string name="app_name">tablayout</string>
+    <string description="Content description for new notification (no number count) [CHAR_LIMIT=NONE]" name="mtrl_badge_numberless_content_description">New notification</string>
+
+    <plurals description="Plural form content description for number of new notifications [CHAR_LIMIT=NONE]" name="mtrl_badge_content_description">
+        <item quantity="one"><ns1:g id="count">%d</ns1:g> new notification</item>
+        <item quantity="other"><ns1:g id="count">%d</ns1:g> new notifications</item>
+    </plurals>
+    <string name="mtrl_exceed_max_badge_number_suffix" translatable="false"><ns1:g example="999" id="maximum number">%1$d</ns1:g><ns1:g example="+" id="suffix">%2$s</ns1:g></string>
+
+</resources>

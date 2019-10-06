@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.suapp.ui.tablayout.CutomTabLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="#88ffff00">
+
+    <ImageView
+        android:id="@+id/animation_view"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@android:id/text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:textColor="@color/custom_title_color_selector"
+        android:textSize="12sp" />
+
+</com.suapp.ui.tablayout.CutomTabLayout>
