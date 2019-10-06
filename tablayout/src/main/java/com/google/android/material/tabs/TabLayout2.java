@@ -98,6 +98,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.lang.CharSequence;
 
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_DRAGGING;
@@ -1812,10 +1813,18 @@ public class TabLayout2 extends HorizontalScrollView {
       // will be interpreted as unselected
       selectedTab = tab;
       if (currentTab != null) {
-        dispatchTabUnselected(currentTab);
+        if (dispatchTabSelected) {
+          dispatchTabUnselected(currentTab);
+        } else if (currentVpSelectedListener != null) {
+          currentVpSelectedListener.onTabUnselected(currentTab);
+        }
       }
       if (tab != null) {
-        dispatchTabSelected(tab);
+        if (dispatchTabSelected) {
+          dispatchTabSelected(tab);
+        } else if (currentVpSelectedListener != null) {
+          currentVpSelectedListener.onTabSelected(tab);
+        }
       }
     }
   }
