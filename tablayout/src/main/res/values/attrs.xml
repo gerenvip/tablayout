@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <declare-styleable name="TabLayout">
+        <!--当 tabIndicatorFullWidth 为 false，即 指示器的宽度由内容的宽度来决定 时
+        定义最小的指示器宽度，默认是 24dp -->
+        <attr format="dimension" name="minIndicatorWidth" />
+    </declare-styleable>
 
 
 

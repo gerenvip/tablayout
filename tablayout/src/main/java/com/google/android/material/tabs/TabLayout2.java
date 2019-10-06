@@ -455,6 +455,7 @@ public class TabLayout2 extends HorizontalScrollView {
   boolean inlineLabel;
   boolean tabIndicatorFullWidth;
   boolean unboundedRipple;
+  int minIndicatorWidth;
 
   private final ArrayList<OnTabSelectedListener> selectedListeners = new ArrayList<>();
   @Nullable
@@ -516,28 +517,28 @@ public class TabLayout2 extends HorizontalScrollView {
     }
 
     slidingTabIndicator.setSelectedIndicatorHeight(
-            a.getDimensionPixelSize(R.styleable.TabLayout_tabIndicatorHeight, -1));
+            a.getDimensionPixelSize(com.google.android.material.R.styleable.TabLayout_tabIndicatorHeight, -1));
     slidingTabIndicator.setSelectedIndicatorColor(
-            a.getColor(R.styleable.TabLayout_tabIndicatorColor, 0));
+            a.getColor(com.google.android.material.R.styleable.TabLayout_tabIndicatorColor, 0));
     setSelectedTabIndicator(
-            MaterialResources.getDrawable(context, a, R.styleable.TabLayout_tabIndicator));
+            MaterialResources.getDrawable(context, a, com.google.android.material.R.styleable.TabLayout_tabIndicator));
     setSelectedTabIndicatorGravity(
-            a.getInt(R.styleable.TabLayout_tabIndicatorGravity, INDICATOR_GRAVITY_BOTTOM));
-    setTabIndicatorFullWidth(a.getBoolean(R.styleable.TabLayout_tabIndicatorFullWidth, true));
+            a.getInt(com.google.android.material.R.styleable.TabLayout_tabIndicatorGravity, INDICATOR_GRAVITY_BOTTOM));
+    setTabIndicatorFullWidth(a.getBoolean(com.google.android.material.R.styleable.TabLayout_tabIndicatorFullWidth, true));
 
     tabPaddingStart =
             tabPaddingTop =
                     tabPaddingEnd =
-                            tabPaddingBottom = a.getDimensionPixelSize(R.styleable.TabLayout_tabPadding, 0);
+                            tabPaddingBottom = a.getDimensionPixelSize(com.google.android.material.R.styleable.TabLayout_tabPadding, 0);
     tabPaddingStart =
-            a.getDimensionPixelSize(R.styleable.TabLayout_tabPaddingStart, tabPaddingStart);
-    tabPaddingTop = a.getDimensionPixelSize(R.styleable.TabLayout_tabPaddingTop, tabPaddingTop);
-    tabPaddingEnd = a.getDimensionPixelSize(R.styleable.TabLayout_tabPaddingEnd, tabPaddingEnd);
+            a.getDimensionPixelSize(com.google.android.material.R.styleable.TabLayout_tabPaddingStart, tabPaddingStart);
+    tabPaddingTop = a.getDimensionPixelSize(com.google.android.material.R.styleable.TabLayout_tabPaddingTop, tabPaddingTop);
+    tabPaddingEnd = a.getDimensionPixelSize(com.google.android.material.R.styleable.TabLayout_tabPaddingEnd, tabPaddingEnd);
     tabPaddingBottom =
-            a.getDimensionPixelSize(R.styleable.TabLayout_tabPaddingBottom, tabPaddingBottom);
+            a.getDimensionPixelSize(com.google.android.material.R.styleable.TabLayout_tabPaddingBottom, tabPaddingBottom);
 
     tabTextAppearance =
-            a.getResourceId(R.styleable.TabLayout_tabTextAppearance, R.style.TextAppearance_Design_Tab2);
+            a.getResourceId(com.google.android.material.R.styleable.TabLayout_tabTextAppearance, R.style.TextAppearance_Design_Tab2);
 
     // Text colors/sizes come from the text appearance first
     @SuppressLint("CustomViewStyleable") final TypedArray ta =
@@ -556,42 +557,46 @@ public class TabLayout2 extends HorizontalScrollView {
       ta.recycle();
     }
 
-    if (a.hasValue(R.styleable.TabLayout_tabTextColor)) {
+    if (a.hasValue(com.google.android.material.R.styleable.TabLayout_tabTextColor)) {
       // If we have an explicit text color set, use it instead
       tabTextColors =
-              MaterialResources.getColorStateList(context, a, R.styleable.TabLayout_tabTextColor);
+              MaterialResources.getColorStateList(context, a, com.google.android.material.R.styleable.TabLayout_tabTextColor);
     }
 
-    if (a.hasValue(R.styleable.TabLayout_tabSelectedTextColor)) {
+    if (a.hasValue(com.google.android.material.R.styleable.TabLayout_tabSelectedTextColor)) {
       // We have an explicit selected text color set, so we need to make merge it with the
       // current colors. This is exposed so that developers can use theme attributes to set
       // this (theme attrs in ColorStateLists are Lollipop+)
-      final int selected = a.getColor(R.styleable.TabLayout_tabSelectedTextColor, 0);
+      final int selected = a.getColor(com.google.android.material.R.styleable.TabLayout_tabSelectedTextColor, 0);
       tabTextColors = createColorStateList(tabTextColors.getDefaultColor(), selected);
     }
 
     tabIconTint =
-            MaterialResources.getColorStateList(context, a, R.styleable.TabLayout_tabIconTint);
+            MaterialResources.getColorStateList(context, a, com.google.android.material.R.styleable.TabLayout_tabIconTint);
     tabIconTintMode =
-            ViewUtils.parseTintMode(a.getInt(R.styleable.TabLayout_tabIconTintMode, -1), null);
+            ViewUtils.parseTintMode(a.getInt(com.google.android.material.R.styleable.TabLayout_tabIconTintMode, -1), null);
 
     tabRippleColorStateList =
-            MaterialResources.getColorStateList(context, a, R.styleable.TabLayout_tabRippleColor);
+            MaterialResources.getColorStateList(context, a, com.google.android.material.R.styleable.TabLayout_tabRippleColor);
 
     tabIndicatorAnimationDuration =
-            a.getInt(R.styleable.TabLayout_tabIndicatorAnimationDuration, ANIMATION_DURATION);
+            a.getInt(com.google.android.material.R.styleable.TabLayout_tabIndicatorAnimationDuration, ANIMATION_DURATION);
 
     requestedTabMinWidth =
-            a.getDimensionPixelSize(R.styleable.TabLayout_tabMinWidth, INVALID_WIDTH);
+            a.getDimensionPixelSize(com.google.android.material.R.styleable.TabLayout_tabMinWidth, INVALID_WIDTH);
     requestedTabMaxWidth =
-            a.getDimensionPixelSize(R.styleable.TabLayout_tabMaxWidth, INVALID_WIDTH);
-    tabBackgroundResId = a.getResourceId(R.styleable.TabLayout_tabBackground, 0);
-    contentInsetStart = a.getDimensionPixelSize(R.styleable.TabLayout_tabContentStart, 0);
+            a.getDimensionPixelSize(com.google.android.material.R.styleable.TabLayout_tabMaxWidth, INVALID_WIDTH);
+    tabBackgroundResId = a.getResourceId(com.google.android.material.R.styleable.TabLayout_tabBackground, 0);
+    contentInsetStart = a.getDimensionPixelSize(com.google.android.material.R.styleable.TabLayout_tabContentStart, 0);
     // noinspection WrongConstant
-    mode = a.getInt(R.styleable.TabLayout_tabMode, MODE_FIXED);
-    tabGravity = a.getInt(R.styleable.TabLayout_tabGravity, GRAVITY_FILL);
-    inlineLabel = a.getBoolean(R.styleable.TabLayout_tabInlineLabel, false);
-    unboundedRipple = a.getBoolean(R.styleable.TabLayout_tabUnboundedRipple, false);
+    mode = a.getInt(com.google.android.material.R.styleable.TabLayout_tabMode, MODE_FIXED);
+    tabGravity = a.getInt(com.google.android.material.R.styleable.TabLayout_tabGravity, GRAVITY_FILL);
+    inlineLabel = a.getBoolean(com.google.android.material.R.styleable.TabLayout_tabInlineLabel, false);
+    unboundedRipple = a.getBoolean(com.google.android.material.R.styleable.TabLayout_tabUnboundedRipple, false);
+
+    // tablayout2 define
+    minIndicatorWidth = a.getDimensionPixelSize(R.styleable.TabLayout_minIndicatorWidth, (int) ViewUtils.dpToPx(getContext(), MIN_INDICATOR_WIDTH));
+
     a.recycle();
 
     // TODO add attr for these
@@ -601,6 +606,22 @@ public class TabLayout2 extends HorizontalScrollView {
 
     // Now apply the tab mode and gravity
     applyModeAndGravity();
+  }
+
+  /**
+   * set minIndicatorWidth
+   *
+   * @param minIndicatorWidth px unit
+   */
+  public void setMinIndicatorWidth(int minIndicatorWidth) {
+    this.minIndicatorWidth = minIndicatorWidth;
+  }
+
+  /**
+   * get minIndicatorWidth
+   */
+  public int getMinIndicatorWidth() {
+    return minIndicatorWidth;
   }
 
   /**
@@ -3156,7 +3177,7 @@ public class TabLayout2 extends HorizontalScrollView {
     private void calculateTabViewContentBounds(
             @NonNull TabView tabView, @NonNull RectF contentBounds) {
       int tabViewContentWidth = tabView.getContentWidth();
-      @SuppressLint("RestrictedApi") int minIndicatorWidth = (int) ViewUtils.dpToPx(getContext(), MIN_INDICATOR_WIDTH);
+      @SuppressLint("RestrictedApi") int minIndicatorWidth = TabLayout2.this.minIndicatorWidth;
 
       if (tabViewContentWidth < minIndicatorWidth) {
         tabViewContentWidth = minIndicatorWidth;

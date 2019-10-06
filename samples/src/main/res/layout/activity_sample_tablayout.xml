@@ -85,7 +85,9 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tab_layout_2"
         app:tabContentStart="0dp"
-        app:tabMode="scrollable" />
+        app:tabIndicatorFullWidth="false"
+        app:minIndicatorWidth="16dp"
+        app:tabMode="auto" />
 
     <com.google.android.material.tabs.TabLayout2
         android:id="@+id/tab_layout_4"

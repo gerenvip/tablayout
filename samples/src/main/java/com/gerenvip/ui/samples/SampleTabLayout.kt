@@ -21,8 +21,8 @@ class SampleTabLayout : AppCompatActivity() {
 
         mAdapter = TestAdapter(supportFragmentManager)
         view_pager.adapter = mAdapter
-        configTab1()
-        configTab2()
+//        configTab1()
+//        configTab2()
         configTab3()
 //        configTab4()
 //        configTab5()
