@@ -87,6 +87,7 @@
         app:tabContentStart="0dp"
         app:tabIndicatorFullWidth="false"
         app:minIndicatorWidth="16dp"
+        app:indicatorGrowNearestEdge="true"
         app:tabMode="auto" />
 
     <com.google.android.material.tabs.TabLayout2

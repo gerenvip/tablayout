@@ -193,6 +193,9 @@ public class TabLayout2 extends HorizontalScrollView {
   private static final int MIN_INDICATOR_WIDTH = 24;
 
   @Dimension(unit = Dimension.DP)
+  private static final int MOTION_NON_ADJACENT_OFFSET = 24;
+
+  @Dimension(unit = Dimension.DP)
   static final int FIXED_WRAP_GUTTER_MIN = 16;
 
   private static final int INVALID_WIDTH = -1;
@@ -455,7 +458,10 @@ public class TabLayout2 extends HorizontalScrollView {
   boolean inlineLabel;
   boolean tabIndicatorFullWidth;
   boolean unboundedRipple;
+
+  //tablayout2 custom
   int minIndicatorWidth;
+  boolean indicatorGrowNearestEdge;
 
   private final ArrayList<OnTabSelectedListener> selectedListeners = new ArrayList<>();
   @Nullable
@@ -596,6 +602,7 @@ public class TabLayout2 extends HorizontalScrollView {
 
     // tablayout2 define
     minIndicatorWidth = a.getDimensionPixelSize(R.styleable.TabLayout_minIndicatorWidth, (int) ViewUtils.dpToPx(getContext(), MIN_INDICATOR_WIDTH));
+    indicatorGrowNearestEdge = a.getBoolean(R.styleable.TabLayout_indicatorGrowNearestEdge, false);
 
     a.recycle();
 
@@ -606,6 +613,22 @@ public class TabLayout2 extends HorizontalScrollView {
 
     // Now apply the tab mode and gravity
     applyModeAndGravity();
+  }
+
+  /**
+   * 当前一次选择的tab 和本次选中的tab 不相邻，是否 indicator 从最近的边缘开始
+   *
+   * @param growNearestEdge
+   */
+  public void setIndicatorGrowNearestEdge(boolean growNearestEdge) {
+    this.indicatorGrowNearestEdge = growNearestEdge;
+  }
+
+  /**
+   * 当前一次选择的tab 和本次选中的tab 不相邻，是否 indicator 从最近的边缘开始
+   */
+  public boolean isIndicatorGrowNearestEdge() {
+    return indicatorGrowNearestEdge;
   }
 
   /**
@@ -3131,8 +3154,33 @@ public class TabLayout2 extends HorizontalScrollView {
       final int finalTargetLeft = targetLeft;
       final int finalTargetRight = targetRight;
 
-      final int startLeft = indicatorLeft;
-      final int startRight = indicatorRight;
+      final int startLeft;
+      final int startRight;
+
+      //If the views are adjacent, we'll animate from edge-to-edge
+      if (Math.abs(position - selectedPosition) <= 1 || !indicatorGrowNearestEdge) {
+        startLeft = indicatorLeft;
+        startRight = indicatorRight;
+      } else {//Else, we'll just grow from the nearest edge
+        final boolean isRtl = ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL;
+
+        @SuppressLint("RestrictedApi") final int offset = (int) ViewUtils.dpToPx(getContext(), MOTION_NON_ADJACENT_OFFSET);
+        if (position < selectedPosition) {
+          // We're going end-to-start
+          if (isRtl) {
+            startLeft = startRight = targetLeft - offset;
+          } else {
+            startLeft = startRight = targetRight + offset;
+          }
+        } else {
+          // We're going start-to-end
+          if (isRtl) {
+            startLeft = startRight = targetRight + offset;
+          } else {
+            startLeft = startRight = targetLeft - offset;
+          }
+        }
+      }
 
       if (startLeft != finalTargetLeft || startRight != finalTargetRight) {
         ValueAnimator animator = indicatorAnimator = new ValueAnimator();
