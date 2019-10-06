@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.suapp.ui.tablayout.CutomTabLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.gerenvip.ui.samples.CustomTabLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -24,4 +24,4 @@
         android:textColor="@color/custom_title_color_selector"
         android:textSize="12sp" />
 
-</com.suapp.ui.tablayout.CutomTabLayout>
+</com.gerenvip.ui.samples.CustomTabLayout>

@@ -24,7 +24,7 @@ class SampleTabLayout : AppCompatActivity() {
         configTab1()
         configTab2()
         configTab3()
-//        configTab4()
+        configTab4()
 //        configTab5()
 //        configTab6()
 //        configTab7()
@@ -113,9 +113,9 @@ class SampleTabLayout : AppCompatActivity() {
     }
 
     private fun configTab4() {
-        tab_layout_4.tabMode = TabLayout.MODE_SCROLLABLE
+        tab_layout_4.tabMode = TabLayout.MODE_AUTO
         tab_layout_4.setupWithViewPager(view_pager)
-        val tabCount = tab_layout_4.getTabCount()
+        val tabCount = tab_layout_4.tabCount
         for (i in 0 until tabCount) {
             val tab = tab_layout_4.getTabAt(i)
             tab?.setCustomView(R.layout.view_custom)

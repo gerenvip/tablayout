@@ -126,7 +126,7 @@ import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_SETTLING;
  * example usage is like so:
  *
  * <pre>
- * &lt;com.google.android.material.tabs.TabLayout
+ * &lt;com.google.android.material.tablayout2.TabLayout
  *         android:layout_height=&quot;wrap_content&quot;
  *         android:layout_width=&quot;match_parent&quot;&gt;
  *
@@ -153,7 +153,7 @@ import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_SETTLING;
  *     android:layout_width=&quot;match_parent&quot;
  *     android:layout_height=&quot;match_parent&quot;&gt;
  *
- *     &lt;com.google.android.material.tabs.TabLayout
+ *     &lt;com.google.android.material.tablayout2.TabLayout
  *         android:layout_width=&quot;match_parent&quot;
  *         android:layout_height=&quot;wrap_content&quot;
  *         android:layout_gravity=&quot;top&quot; /&gt;
@@ -2583,10 +2583,16 @@ public class TabLayout extends HorizontalScrollView {
         }
 
         customTextView = custom.findViewById(android.R.id.text1);
+        if (customTextView == null && custom instanceof ITabCustomView) {
+          customTextView = ((ITabCustomView) custom).getCustomTextView();
+        }
         if (customTextView != null) {
           defaultMaxLines = TextViewCompat.getMaxLines(customTextView);
         }
         customIconView = custom.findViewById(android.R.id.icon);
+        if (customIconView == null && custom instanceof ITabCustomView) {
+          customIconView = ((ITabCustomView) custom).getCustomIconView();
+        }
       } else {
         // We do not have a custom view. Remove one if it already exists
         if (customView != null) {
@@ -2904,6 +2910,9 @@ public class TabLayout extends HorizontalScrollView {
       int left = 0;
       int right = 0;
 
+      if (customView != null && customView.getVisibility() != View.GONE && customView instanceof ITabCustomView) {
+        return ((ITabCustomView) customView).getContentWidth();
+      }
       for (View view : new View[]{textView, iconView, customView}) {
         if (view != null && view.getVisibility() == View.VISIBLE) {
           left = initialized ? Math.min(left, view.getLeft()) : view.getLeft();

@@ -97,6 +97,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#C1FFC1"
+        app:tabIndicatorFullWidth="false"
+        app:minIndicatorWidth="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tab_layout_3"
