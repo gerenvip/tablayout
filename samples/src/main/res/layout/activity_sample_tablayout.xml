@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.tabs.TabLayout2
+    <com.google.android.material.tablayout2.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,6 +19,7 @@
         app:tabIconTintMode="src_in"
         app:tabIndicatorHeight="0dp"
         app:tabMode="fixed"
+        app:tabInlineLabel="true"
         app:tabRippleColor="#22ff0000"
         app:tabSelectedTextColor="@color/colorPrimary">
 
@@ -41,9 +42,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Menu4" />
-    </com.google.android.material.tabs.TabLayout2>
+    </com.google.android.material.tablayout2.TabLayout>
 
-    <com.google.android.material.tabs.TabLayout2
+    <com.google.android.material.tablayout2.TabLayout
         android:id="@+id/tab_layout_2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -74,9 +75,9 @@
             android:icon="@mipmap/ic_settings_black_24dp"
             android:text="Menu3" />
 
-    </com.google.android.material.tabs.TabLayout2>
+    </com.google.android.material.tablayout2.TabLayout>
 
-    <com.google.android.material.tabs.TabLayout2
+    <com.google.android.material.tablayout2.TabLayout
         android:id="@+id/tab_layout_3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -88,9 +89,10 @@
         app:tabIndicatorFullWidth="false"
         app:minIndicatorWidth="16dp"
         app:indicatorGrowNearestEdge="true"
+        app:tabInlineLabel="true"
         app:tabMode="auto" />
 
-    <com.google.android.material.tabs.TabLayout2
+    <com.google.android.material.tablayout2.TabLayout
         android:id="@+id/tab_layout_4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -100,7 +102,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tab_layout_3"
         app:tabMode="scrollable" />
 
-    <com.google.android.material.tabs.TabLayout2
+    <com.google.android.material.tablayout2.TabLayout
         android:id="@+id/tab_layout_5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -115,7 +117,7 @@
         app:tabIndicatorHeight="2dp"
         app:tabMode="scrollable" />
 
-    <com.google.android.material.tabs.TabLayout2
+    <com.google.android.material.tablayout2.TabLayout
         android:id="@+id/tab_layout_6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -128,7 +130,7 @@
         app:tabIconTint="#00000000"
         app:tabMode="scrollable" />
 
-    <com.google.android.material.tabs.TabLayout2
+    <com.google.android.material.tablayout2.TabLayout
         android:id="@+id/tab_layout_7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

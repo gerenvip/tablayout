@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
-import com.google.android.material.tabs.TabLayout2
+import com.google.android.material.tablayout2.TabLayout
 import kotlinx.android.synthetic.main.activity_sample_tablayout.*
 
 /**
@@ -21,8 +21,8 @@ class SampleTabLayout : AppCompatActivity() {
 
         mAdapter = TestAdapter(supportFragmentManager)
         view_pager.adapter = mAdapter
-//        configTab1()
-//        configTab2()
+        configTab1()
+        configTab2()
         configTab3()
 //        configTab4()
 //        configTab5()
@@ -50,16 +50,16 @@ class SampleTabLayout : AppCompatActivity() {
                 }
             }
         })
-        tab_layout.addOnTabSelectedListener(object : TabLayout2.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout2.Tab) {
+        tab_layout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
                 val position = tab.position
                 view_pager.setCurrentItem(position, true)
             }
 
-            override fun onTabUnselected(tab: TabLayout2.Tab?) {
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
             }
 
-            override fun onTabReselected(tab: TabLayout2.Tab?) {
+            override fun onTabReselected(tab: TabLayout.Tab?) {
             }
 
         })
@@ -76,16 +76,16 @@ class SampleTabLayout : AppCompatActivity() {
                 }
             }
         })
-        tab_layout_2.addOnTabSelectedListener(object : TabLayout2.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout2.Tab) {
+        tab_layout_2.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
                 val position = tab.position
                 view_pager.setCurrentItem(position, true)
             }
 
-            override fun onTabUnselected(tab: TabLayout2.Tab?) {
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
             }
 
-            override fun onTabReselected(tab: TabLayout2.Tab?) {
+            override fun onTabReselected(tab: TabLayout.Tab?) {
             }
 
         })
@@ -96,24 +96,24 @@ class SampleTabLayout : AppCompatActivity() {
      */
     private fun configTab3() {
         tab_layout_3.setupWithViewPager(view_pager)
-        tab_layout_3.addOnTabSelectedListener(object : TabLayout2.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout2.Tab) {
+        tab_layout_3.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
                 val position = tab.position
                 Toast.makeText(this@SampleTabLayout,"select pos=$position",Toast.LENGTH_SHORT).show()
 
             }
 
-            override fun onTabUnselected(tab: TabLayout2.Tab?) {
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
             }
 
-            override fun onTabReselected(tab: TabLayout2.Tab?) {
+            override fun onTabReselected(tab: TabLayout.Tab?) {
             }
 
         })
     }
 
     private fun configTab4() {
-        tab_layout_4.tabMode = TabLayout2.MODE_SCROLLABLE
+        tab_layout_4.tabMode = TabLayout.MODE_SCROLLABLE
         tab_layout_4.setupWithViewPager(view_pager)
         val tabCount = tab_layout_4.getTabCount()
         for (i in 0 until tabCount) {
