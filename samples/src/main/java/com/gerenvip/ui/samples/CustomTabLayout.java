@@ -47,6 +47,11 @@ public class CustomTabLayout extends FrameLayout implements ITabCustomView {
   }
 
   @Override
+  public int getContentHeight() {
+    return textview.getHeight();
+  }
+
+  @Override
   public TextView getCustomTextView() {
     return textview;
   }

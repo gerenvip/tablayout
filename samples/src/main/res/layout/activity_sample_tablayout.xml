@@ -88,10 +88,10 @@
         app:tabContentStart="0dp"
         app:tabIndicatorFullWidth="false"
         app:minIndicatorWidth="16dp"
-        app:tabIndicatorPadding="8dp"
+        app:tabIndicatorVerticalPadding="0dp"
         app:indicatorGrowNearestEdge="true"
-        app:tabIndicatorGravity="bottom"
-        app:tabInlineLabel="true"
+        app:tabIndicatorGravity2="contentBottom"
+        app:tabIndicatorHorizontalPadding="10dp"
         app:tabMode="auto" />
 
     <com.google.android.material.tablayout2.TabLayout
@@ -101,6 +101,7 @@
         android:background="#C1FFC1"
         app:tabIndicatorFullWidth="false"
         app:minIndicatorWidth="16dp"
+        app:tabIndicatorGravity2="contentBottom"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tab_layout_3"

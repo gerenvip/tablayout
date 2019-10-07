@@ -16,6 +16,11 @@ public interface ITabCustomView {
    */
   int getContentWidth();
 
+  /**
+   * 返回内容的高度
+   */
+  int getContentHeight();
+
   @Nullable
   TextView getCustomTextView();
 

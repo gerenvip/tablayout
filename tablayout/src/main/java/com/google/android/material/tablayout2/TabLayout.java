@@ -345,6 +345,13 @@ public class TabLayout extends HorizontalScrollView {
   public static final int INDICATOR_GRAVITY_STRETCH = 3;
 
   /**
+   * 紧贴 tab 内容底部
+   */
+  public static final int INDICATOR_GRAVITY_CONTENT_BOTTOM = 4;
+
+  public static final int INDICATOR_GRAVITY_CONTENT_TOP = 5;
+
+  /**
    * @hide
    */
   @RestrictTo(LIBRARY_GROUP)
@@ -353,7 +360,9 @@ public class TabLayout extends HorizontalScrollView {
                   INDICATOR_GRAVITY_BOTTOM,
                   INDICATOR_GRAVITY_CENTER,
                   INDICATOR_GRAVITY_TOP,
-                  INDICATOR_GRAVITY_STRETCH
+                  INDICATOR_GRAVITY_STRETCH,
+                  INDICATOR_GRAVITY_CONTENT_BOTTOM,
+                  INDICATOR_GRAVITY_CONTENT_TOP
           })
   @Retention(RetentionPolicy.SOURCE)
   public @interface TabIndicatorGravity {
@@ -462,7 +471,9 @@ public class TabLayout extends HorizontalScrollView {
   int minIndicatorWidth;
   boolean indicatorGrowNearestEdge;
   private boolean tabIndicatorSticky;
-  private int tabIndicatorPadding;
+  private int tabIndicatorVerticalPadding;
+  private int tabIndicatorHorizontalPadding;
+  private int tabIndicatorFixedWidth = -1;
 
   private final ArrayList<OnTabSelectedListener> selectedListeners = new ArrayList<>();
   @Nullable
@@ -529,8 +540,13 @@ public class TabLayout extends HorizontalScrollView {
             a.getColor(com.google.android.material.R.styleable.TabLayout_tabIndicatorColor, 0));
     setSelectedTabIndicator(
             MaterialResources.getDrawable(context, a, com.google.android.material.R.styleable.TabLayout_tabIndicator));
-    setSelectedTabIndicatorGravity(
-            a.getInt(com.google.android.material.R.styleable.TabLayout_tabIndicatorGravity, INDICATOR_GRAVITY_BOTTOM));
+
+    if (a.hasValue(R.styleable.TabLayout_tabIndicatorGravity2)) {
+      setSelectedTabIndicatorGravity(a.getInt(R.styleable.TabLayout_tabIndicatorGravity2, INDICATOR_GRAVITY_BOTTOM));
+    } else {
+      setSelectedTabIndicatorGravity(
+              a.getInt(com.google.android.material.R.styleable.TabLayout_tabIndicatorGravity, INDICATOR_GRAVITY_BOTTOM));
+    }
     setTabIndicatorFullWidth(a.getBoolean(com.google.android.material.R.styleable.TabLayout_tabIndicatorFullWidth, true));
 
     tabPaddingStart =
@@ -605,7 +621,9 @@ public class TabLayout extends HorizontalScrollView {
     minIndicatorWidth = a.getDimensionPixelSize(R.styleable.TabLayout_minIndicatorWidth, (int) ViewUtils.dpToPx(getContext(), MIN_INDICATOR_WIDTH));
     indicatorGrowNearestEdge = a.getBoolean(R.styleable.TabLayout_indicatorGrowNearestEdge, false);
     tabIndicatorSticky = a.getBoolean(R.styleable.TabLayout_tabIndicatorSticky, false);
-    tabIndicatorPadding = a.getDimensionPixelOffset(R.styleable.TabLayout_tabIndicatorPadding, 0);
+    tabIndicatorVerticalPadding = a.getDimensionPixelOffset(R.styleable.TabLayout_tabIndicatorVerticalPadding, 0);
+    tabIndicatorHorizontalPadding = a.getDimensionPixelOffset(R.styleable.TabLayout_tabIndicatorHorizontalPadding, 0);
+    tabIndicatorFixedWidth = a.getDimensionPixelOffset(R.styleable.TabLayout_tabIndicatorFixedWidth, -1);
 
     a.recycle();
 
@@ -618,18 +636,72 @@ public class TabLayout extends HorizontalScrollView {
     applyModeAndGravity();
   }
 
-  public void setTabIndicatorPadding(int padding) {
-    tabIndicatorPadding = padding;
+  /**
+   * 设置 定长指示器  {@link #setTabIndicatorFullWidth(boolean)} 为 false 的情况下生效。
+   * <p/>
+   * 建议 通过 R.styleable#TabLayout_tabIndicator 设置一个位图替换该方式
+   *
+   * @param indicatorFixedWidth 指示器的固定宽度，默认值 -1 ，表示启用定长指示器。请设置一个非0 的正数
+   * @attr ref R.styleable#TabLayout_tabIndicatorFixedWidth
+   */
+  public void setTabIndicatorFixedWidth(int indicatorFixedWidth) {
+    tabIndicatorFixedWidth = indicatorFixedWidth;
   }
 
-  public int getTabIndicatorPadding() {
-    return tabIndicatorPadding;
+  /**
+   * 获取定长指示器的长度
+   *
+   * @return 如果未设置，返回默认值 -1， 表示 未开启定长指示器
+   */
+  public int getTabIndicatorFixedWidth() {
+    return tabIndicatorFixedWidth;
+  }
+
+  /**
+   * 给 指示器设置竖直方向上的padding值
+   *
+   * @param padding 指示器距所依赖的边间距, tabIndicatorGravity 对应如下:
+   *                bottom -> 指示器距底部的间距
+   *                center,top -> 指示器距顶部的间距
+   *                stretch -> 指示器距顶部和底部的间距
+   *                contentBottom -> 指示器距底部的间距
+   *                contentTop -> 指示器距顶部的间距
+   * @attr ref R.styleable#TabLayout_tabIndicatorVerticalPadding
+   */
+  public void setTabIndicatorVerticalPadding(int padding) {
+    tabIndicatorVerticalPadding = padding;
+  }
+
+  /**
+   * 获取 指示器在竖直方向上的padding
+   */
+  public int getTabIndicatorVerticalPadding() {
+    return tabIndicatorVerticalPadding;
+  }
+
+  /**
+   * 设置 tab 的指示器在水平方向的padding， 只在 {@link #setTabIndicatorFullWidth(boolean)} 为 false 的情况下生效
+   *
+   * @param padding 水平方向上的padding值，左右offset 是 padding 的一半
+   * @attr ref com.google.android.material.R.styleable#TabLayout_tabIndicatorFullWidth
+   * @attr ref R.styleable#TabLayout_tabIndicatorHorizontalPadding
+   */
+  public void setTabIndicatorHorizontalPadding(int padding) {
+    tabIndicatorHorizontalPadding = padding;
+  }
+
+  /**
+   * 获取 tab 指示器水平方向的 padding 值
+   */
+  public int getTabIndicatorHorizontalPadding() {
+    return tabIndicatorHorizontalPadding;
   }
 
   /**
    * 设置 tab indicator 是否允许粘滞运动
    *
    * @param sticky
+   * @attr ref R.styleable#TabLayout_tabIndicatorSticky
    */
   public void setTabIndicatorSticky(boolean sticky) {
     tabIndicatorSticky = sticky;
@@ -646,6 +718,7 @@ public class TabLayout extends HorizontalScrollView {
    * 当前一次选择的tab 和本次选中的tab 不相邻，是否 indicator 从最近的边缘开始
    *
    * @param growNearestEdge
+   * @attr ref R.styleable#TabLayout_indicatorGrowNearestEdge
    */
   public void setIndicatorGrowNearestEdge(boolean growNearestEdge) {
     this.indicatorGrowNearestEdge = growNearestEdge;
@@ -661,7 +734,9 @@ public class TabLayout extends HorizontalScrollView {
   /**
    * set minIndicatorWidth
    *
-   * @param minIndicatorWidth px unit
+   * @param minIndicatorWidth 当 tabIndicatorFullWidth 为 false，即 指示器的宽度由内容的宽度来决定 时
+   *                          定义最小的指示器宽度，默认是 24dp
+   * @attr ref R.styleable#TabLayout_minIndicatorWidth
    */
   public void setMinIndicatorWidth(int minIndicatorWidth) {
     this.minIndicatorWidth = minIndicatorWidth;
@@ -1101,11 +1176,15 @@ public class TabLayout extends HorizontalScrollView {
    * unless gravity is set to {@link #INDICATOR_GRAVITY_STRETCH}, in which case it will ignore
    * indicator height and stretch across the entire height and width of the {@link TabLayout}. This
    * defaults to {@link #INDICATOR_GRAVITY_BOTTOM} if not set.
+   * <p>
+   * 推荐使用 attr R.styleable#TabLayout_tabIndicatorGravity2 来代替 com.google.android.material.R.styleable#TabLayout_tabIndicatorGravity
    *
    * @param indicatorGravity one of {@link #INDICATOR_GRAVITY_BOTTOM}, {@link
-   *                         #INDICATOR_GRAVITY_CENTER}, {@link #INDICATOR_GRAVITY_TOP}, or {@link
-   *                         #INDICATOR_GRAVITY_STRETCH}
+   *                         #INDICATOR_GRAVITY_CENTER}, {@link #INDICATOR_GRAVITY_TOP},{@link
+   *                         #INDICATOR_GRAVITY_STRETCH},{@link #INDICATOR_GRAVITY_CONTENT_BOTTOM},
+   *                         or {@link #INDICATOR_GRAVITY_CONTENT_TOP}
    * @attr ref com.google.android.material.R.styleable#TabLayout_tabIndicatorGravity
+   * @attr ref R.styleable#TabLayout_tabIndicatorGravity2
    */
   public void setSelectedTabIndicatorGravity(@TabIndicatorGravity int indicatorGravity) {
     if (tabIndicatorGravity != indicatorGravity) {
@@ -2952,6 +3031,31 @@ public class TabLayout extends HorizontalScrollView {
       return right - left;
     }
 
+    /**
+     * Calculates the height of the TabView's content.
+     *
+     * @return Height of the tab label, if present, or the width of the tab icon, if present. If tabs
+     * is in inline mode, returns the sum of both the icon and tab label widths.
+     */
+    private int getContentHeight() {
+      boolean initialized = false;
+      int top = 0;
+      int bottom = 0;
+
+      if (customView != null && customView.getVisibility() != View.GONE && customView instanceof ITabCustomView) {
+        return ((ITabCustomView) customView).getContentHeight();
+      }
+      for (View view : new View[]{textView, iconView, customView}) {
+        if (view != null && view.getVisibility() == View.VISIBLE) {
+          top = initialized ? Math.min(top, view.getTop()) : view.getTop();
+          bottom = initialized ? Math.max(bottom, view.getBottom()) : view.getBottom();
+          initialized = true;
+        }
+      }
+
+      return bottom - top;
+    }
+
     @Nullable
     public Tab getTab() {
       return tab;
@@ -3263,6 +3367,8 @@ public class TabLayout extends HorizontalScrollView {
       int tabViewContentWidth = tabView.getContentWidth();
       @SuppressLint("RestrictedApi") int minIndicatorWidth = TabLayout.this.minIndicatorWidth;
 
+      tabViewContentWidth -= tabIndicatorHorizontalPadding;
+
       if (tabViewContentWidth < minIndicatorWidth) {
         tabViewContentWidth = minIndicatorWidth;
       }
@@ -3271,7 +3377,21 @@ public class TabLayout extends HorizontalScrollView {
       int contentLeftBounds = tabViewCenter - (tabViewContentWidth / 2);
       int contentRightBounds = tabViewCenter + (tabViewContentWidth / 2);
 
-      contentBounds.set(contentLeftBounds, 0, contentRightBounds, 0);
+      int tabViewContentHeight = tabView.getContentHeight();
+      int tabViewVerticalCenter = (tabView.getTop() + tabView.getBottom()) / 2;
+      int contentTopBounds = tabViewVerticalCenter - (tabViewContentHeight / 2);
+      int contentBottomBounds = tabViewVerticalCenter + (tabViewContentHeight / 2);
+
+      if (tabIndicatorFixedWidth > 0) {
+        int fixedWidth = tabIndicatorFixedWidth;
+        if (tabIndicatorFixedWidth > tabView.getWidth()) {
+          fixedWidth = tabView.getWidth();
+        }
+        contentLeftBounds = tabViewCenter - fixedWidth / 2;
+        contentRightBounds = tabViewCenter + fixedWidth / 2;
+      }
+
+      contentBounds.set(contentLeftBounds, contentTopBounds, contentRightBounds, contentBottomBounds);
     }
 
     @Override
@@ -3291,27 +3411,37 @@ public class TabLayout extends HorizontalScrollView {
         case INDICATOR_GRAVITY_BOTTOM:
 //          indicatorTop = getHeight() - indicatorHeight;
 //          indicatorBottom = getHeight();
-          int bottom = getHeight() - tabIndicatorPadding;
+          int bottom = getHeight() - tabIndicatorVerticalPadding;
           indicatorTop = bottom - indicatorHeight;
           indicatorBottom = bottom;
           break;
         case INDICATOR_GRAVITY_CENTER:
 //          indicatorTop = (getHeight() - indicatorHeight) / 2;
 //          indicatorBottom = (getHeight() + indicatorHeight) / 2;
-          indicatorTop = (getHeight() - indicatorHeight) / 2 + tabIndicatorPadding;
+          indicatorTop = (getHeight() - indicatorHeight) / 2 + tabIndicatorVerticalPadding;
           indicatorBottom = indicatorTop + indicatorHeight;
           break;
         case INDICATOR_GRAVITY_TOP:
 //          indicatorTop = 0;
 //          indicatorBottom = indicatorHeight;
-          indicatorTop = tabIndicatorPadding;
+          indicatorTop = tabIndicatorVerticalPadding;
           indicatorBottom = indicatorTop + indicatorHeight;
           break;
         case INDICATOR_GRAVITY_STRETCH:
 //          indicatorTop = 0;
 //          indicatorBottom = getHeight();
-          indicatorTop = tabIndicatorPadding;
-          indicatorBottom = getHeight() - tabIndicatorPadding;
+          indicatorTop = tabIndicatorVerticalPadding;
+          indicatorBottom = getHeight() - tabIndicatorVerticalPadding;
+          break;
+        case INDICATOR_GRAVITY_CONTENT_BOTTOM:
+          int contentBottom = (int) tabViewContentBounds.bottom;
+          indicatorTop = contentBottom + tabIndicatorVerticalPadding;
+          indicatorBottom = indicatorTop + indicatorHeight;
+          break;
+        case INDICATOR_GRAVITY_CONTENT_TOP:
+          int contentTop = (int) tabViewContentBounds.top;
+          indicatorBottom = contentTop - tabIndicatorVerticalPadding;
+          indicatorTop = indicatorBottom - indicatorHeight;
           break;
         default:
           break;
