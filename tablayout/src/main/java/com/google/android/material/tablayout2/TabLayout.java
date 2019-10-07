@@ -561,7 +561,7 @@ public class TabLayout extends HorizontalScrollView {
             a.getDimensionPixelSize(com.google.android.material.R.styleable.TabLayout_tabPaddingBottom, tabPaddingBottom);
 
     tabTextAppearance =
-            a.getResourceId(com.google.android.material.R.styleable.TabLayout_tabTextAppearance, R.style.TextAppearance_Design_Tab2);
+            a.getResourceId(com.google.android.material.R.styleable.TabLayout_tabTextAppearance, com.google.android.material.R.style.TextAppearance_Design_Tab);
 
     // Text colors/sizes come from the text appearance first
     @SuppressLint("CustomViewStyleable") final TypedArray ta =

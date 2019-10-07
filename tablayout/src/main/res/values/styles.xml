@@ -1,47 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Base.Widget.Design.TabLayout2" parent="android:Widget">
-        <item name="android:background">@null</item>
-        <item name="tabIconTint">@null</item>
-        <item name="tabMaxWidth" tools:ignore="PrivateResource">@dimen/design_tab_max_width</item>
-        <item name="tabIndicatorAnimationDuration" tools:ignore="PrivateResource">@integer/design_tab_indicator_anim_duration_ms
-        </item>
-        <item name="tabIndicatorColor">?attr/colorAccent</item>
-        <item name="tabIndicatorGravity">bottom</item>
-        <item name="tabIndicator" tools:ignore="PrivateResource">@drawable/mtrl_tabs_default_indicator</item>
-        <item name="tabPaddingStart">12dp</item>
-        <item name="tabPaddingEnd">12dp</item>
-        <item name="tabTextAppearance">@style/TextAppearance.Design.Tab</item>
-        <item name="tabTextColor">@null</item>
-        <item name="tabRippleColor">?attr/colorControlHighlight</item>
-        <item name="tabUnboundedRipple">false</item>
+    <!--红点需要 Theme.MaterialComponents 主题-->
+    <style name="BaseTheme.TabLayout" parent="Theme.MaterialComponents">
+        <item name="tabStyle">@style/TabStyle</item>
+
     </style>
 
-    <style name="Widget.Design.TabLayout2" parent="Base.Widget.Design.TabLayout2">
-        <item name="tabGravity">fill</item>
-        <item name="tabMode">fixed</item>
-        <item name="tabIndicatorFullWidth">true</item>
-    </style>
-
-    <style name="Widget.MaterialComponents.TabLayout2" parent="Widget.Design.TabLayout2">
-        <item name="enforceMaterialTheme">true</item>
-        <item name="enforceTextAppearance">true</item>
-        <item name="android:background">?attr/colorSurface</item>
-        <item name="tabIconTint" tools:ignore="PrivateResource">@color/mtrl_tabs_icon_color_selector</item>
-        <item name="tabIndicatorAnimationDuration" tools:ignore="PrivateResource">@integer/mtrl_tab_indicator_anim_duration_ms
-        </item>
-        <item name="tabIndicatorColor">?attr/colorPrimary</item>
-        <item name="tabTextAppearance">?attr/textAppearanceButton</item>
-        <item name="tabTextColor" tools:ignore="PrivateResource">@color/mtrl_tabs_icon_color_selector</item>
-        <item name="tabRippleColor" tools:ignore="PrivateResource">@color/mtrl_tabs_ripple_color</item>
-        <item name="tabUnboundedRipple">true</item>
-    </style>
-
-    <style name="TextAppearance.Design.Tab2" parent="TextAppearance.AppCompat.Button" >
-        <item name="android:textSize" tools:ignore="PrivateResource">@dimen/design_tab_text_size</item>
-        <item name="android:textColor" tools:ignore="PrivateResource">@color/mtrl_tabs_legacy_text_color_selector</item>
-        <item name="textAllCaps">true</item>
-    </style>
+    <style name="TabStyle" parent="Widget.MaterialComponents.TabLayout" />
 
 </resources>

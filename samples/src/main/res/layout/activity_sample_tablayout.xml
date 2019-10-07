@@ -78,6 +78,8 @@
     </com.google.android.material.tablayout2.TabLayout>
 
     <com.google.android.material.tablayout2.TabLayout
+        android:theme="@style/BaseTheme.TabLayout"
+        style="@style/TabStyle"
         android:id="@+id/tab_layout_3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -85,12 +87,11 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tab_layout_2"
-        app:tabContentStart="0dp"
+        app:tabContentStart="24dp"
         app:tabIndicatorFullWidth="false"
         app:minIndicatorWidth="16dp"
-        app:tabIndicatorVerticalPadding="0dp"
+        app:tabIndicatorVerticalPadding="6dp"
         app:indicatorGrowNearestEdge="true"
-        app:tabIndicatorGravity2="contentBottom"
         app:tabIndicatorHorizontalPadding="10dp"
         app:tabMode="auto" />
 

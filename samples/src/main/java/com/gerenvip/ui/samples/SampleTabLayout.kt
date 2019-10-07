@@ -25,7 +25,7 @@ class SampleTabLayout : AppCompatActivity() {
         configTab2()
         configTab3()
         configTab4()
-//        configTab5()
+        configTab5()
 //        configTab6()
 //        configTab7()
     }
@@ -99,7 +99,7 @@ class SampleTabLayout : AppCompatActivity() {
         tab_layout_3.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 val position = tab.position
-                Toast.makeText(this@SampleTabLayout,"select pos=$position",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@SampleTabLayout, "select pos=$position", Toast.LENGTH_SHORT).show()
 
             }
 
@@ -110,6 +110,11 @@ class SampleTabLayout : AppCompatActivity() {
             }
 
         })
+        val tab = tab_layout_3.getTabAt(1)
+//        tab?.orCreateBadge
+//        tab?.badge?.backgroundColor = Color.RED
+//        tab?.badge?.number = 1
+
     }
 
     private fun configTab4() {
