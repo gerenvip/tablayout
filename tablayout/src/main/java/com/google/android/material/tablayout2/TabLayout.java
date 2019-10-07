@@ -461,6 +461,8 @@ public class TabLayout extends HorizontalScrollView {
   //TabLayout custom
   int minIndicatorWidth;
   boolean indicatorGrowNearestEdge;
+  private boolean tabIndicatorSticky;
+  private int tabIndicatorPadding;
 
   private final ArrayList<OnTabSelectedListener> selectedListeners = new ArrayList<>();
   @Nullable
@@ -602,6 +604,8 @@ public class TabLayout extends HorizontalScrollView {
     // TabLayout define
     minIndicatorWidth = a.getDimensionPixelSize(R.styleable.TabLayout_minIndicatorWidth, (int) ViewUtils.dpToPx(getContext(), MIN_INDICATOR_WIDTH));
     indicatorGrowNearestEdge = a.getBoolean(R.styleable.TabLayout_indicatorGrowNearestEdge, false);
+    tabIndicatorSticky = a.getBoolean(R.styleable.TabLayout_tabIndicatorSticky, false);
+    tabIndicatorPadding = a.getDimensionPixelOffset(R.styleable.TabLayout_tabIndicatorPadding, 0);
 
     a.recycle();
 
@@ -612,6 +616,30 @@ public class TabLayout extends HorizontalScrollView {
 
     // Now apply the tab mode and gravity
     applyModeAndGravity();
+  }
+
+  public void setTabIndicatorPadding(int padding) {
+    tabIndicatorPadding = padding;
+  }
+
+  public int getTabIndicatorPadding() {
+    return tabIndicatorPadding;
+  }
+
+  /**
+   * 设置 tab indicator 是否允许粘滞运动
+   *
+   * @param sticky
+   */
+  public void setTabIndicatorSticky(boolean sticky) {
+    tabIndicatorSticky = sticky;
+  }
+
+  /**
+   * tab indicator 是否允许粘滞运动
+   */
+  public boolean isTabIndicatorSticky() {
+    return tabIndicatorSticky;
   }
 
   /**
@@ -3261,20 +3289,29 @@ public class TabLayout extends HorizontalScrollView {
 
       switch (tabIndicatorGravity) {
         case INDICATOR_GRAVITY_BOTTOM:
-          indicatorTop = getHeight() - indicatorHeight;
-          indicatorBottom = getHeight();
+//          indicatorTop = getHeight() - indicatorHeight;
+//          indicatorBottom = getHeight();
+          int bottom = getHeight() - tabIndicatorPadding;
+          indicatorTop = bottom - indicatorHeight;
+          indicatorBottom = bottom;
           break;
         case INDICATOR_GRAVITY_CENTER:
-          indicatorTop = (getHeight() - indicatorHeight) / 2;
-          indicatorBottom = (getHeight() + indicatorHeight) / 2;
+//          indicatorTop = (getHeight() - indicatorHeight) / 2;
+//          indicatorBottom = (getHeight() + indicatorHeight) / 2;
+          indicatorTop = (getHeight() - indicatorHeight) / 2 + tabIndicatorPadding;
+          indicatorBottom = indicatorTop + indicatorHeight;
           break;
         case INDICATOR_GRAVITY_TOP:
-          indicatorTop = 0;
-          indicatorBottom = indicatorHeight;
+//          indicatorTop = 0;
+//          indicatorBottom = indicatorHeight;
+          indicatorTop = tabIndicatorPadding;
+          indicatorBottom = indicatorTop + indicatorHeight;
           break;
         case INDICATOR_GRAVITY_STRETCH:
-          indicatorTop = 0;
-          indicatorBottom = getHeight();
+//          indicatorTop = 0;
+//          indicatorBottom = getHeight();
+          indicatorTop = tabIndicatorPadding;
+          indicatorBottom = getHeight() - tabIndicatorPadding;
           break;
         default:
           break;

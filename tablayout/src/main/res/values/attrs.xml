@@ -89,6 +89,14 @@
         <attr name="minIndicatorWidth" format="dimension" />
         <!--如果前一次选择的tab 和本次选中的tab 不相邻，是否 indicator 从最近的边缘开始-->
         <attr name="indicatorGrowNearestEdge" format="boolean" />
+        <!--是否 允许 indicator运动的时候开启粘滞效果 -->
+        <attr name="tabIndicatorSticky" format="boolean" />
+        <!--指示器距所依赖的边间距, tabIndicatorGravity 对应如下:
+         bottom -> 指示器距底部的间距
+         center,top -> 指示器距顶部的间距
+         stretch -> 指示器距顶部和底部的间距
+         -->
+        <attr name="tabIndicatorPadding" format="dimension" />
     </declare-styleable>
 
 </resources>
