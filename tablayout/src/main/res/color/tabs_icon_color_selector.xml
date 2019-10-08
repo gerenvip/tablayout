@@ -16,6 +16,6 @@
   -->
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-  <item android:color="?attr/colorAccent" android:state_selected="true"/>
-  <item android:alpha="0.60" android:color="?attr/colorOnSurface"/>
+  <item android:color="@color/colorAccent" android:state_selected="true"/>
+  <item android:alpha="0.60" android:color="@color/colorOnSurface"/>
 </selector>

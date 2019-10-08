@@ -1,5 +1,6 @@
 package com.gerenvip.ui.samples
 
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -111,9 +112,10 @@ class SampleTabLayout : AppCompatActivity() {
 
         })
         val tab = tab_layout_3.getTabAt(1)
-//        tab?.orCreateBadge
-//        tab?.badge?.backgroundColor = Color.RED
-//        tab?.badge?.number = 1
+        tab?.orCreateBadge
+        tab?.badge?.backgroundColor = Color.RED
+        tab?.badge?.number = 1
+        tab?.badge?.badgeTextColor = Color.WHITE
 
     }
 
