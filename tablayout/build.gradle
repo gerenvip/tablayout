@@ -61,6 +61,6 @@ dependencies {
 }
 
 //需要打包发布时 取消注释
-//apply from: "${rootProject.projectDir}/scripts/bintrayUpload.gradle"
+apply from: "${rootProject.projectDir}/jcenter_scripts/bintrayUpload.gradle"
 //publish to nexus
-//apply from: "${rootProject.projectDir}/nexus_scripts/nexusUpload.gradle"
+apply from: "${rootProject.projectDir}/nexus_scripts/nexusUpload.gradle"

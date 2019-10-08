@@ -13,4 +13,4 @@
 .externalNativeBuild
 .idea/
 /nexus_scripts
-/scripts
+/jcenter_scripts
