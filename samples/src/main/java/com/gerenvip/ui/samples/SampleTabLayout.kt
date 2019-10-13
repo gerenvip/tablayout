@@ -2,6 +2,8 @@ package com.gerenvip.ui.samples
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
@@ -22,6 +24,7 @@ class SampleTabLayout : AppCompatActivity() {
 
         mAdapter = TestAdapter(supportFragmentManager)
         view_pager.adapter = mAdapter
+        view_pager.pageMargin = 36
         configTab1()
         configTab2()
         configTab3()
@@ -125,8 +128,10 @@ class SampleTabLayout : AppCompatActivity() {
         val tabCount = tab_layout_4.tabCount
         for (i in 0 until tabCount) {
             val tab = tab_layout_4.getTabAt(i)
-            tab?.setCustomView(R.layout.view_custom)
+//            tab?.setCustomView(R.layout.view_custom)
         }
+        tab_layout_4.isTabIndicatorSticky = true
+        tab_layout_4.setIndicatorInterpolator(AccelerateInterpolator(), DecelerateInterpolator(1.25f))
     }
 
     private fun configTab5() {

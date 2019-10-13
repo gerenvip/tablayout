@@ -87,12 +87,12 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tab_layout_2"
-        app:tabContentStart="24dp"
         app:tabIndicatorFullWidth="false"
         app:minIndicatorWidth="16dp"
         app:tabIndicatorVerticalPadding="6dp"
-        app:indicatorGrowNearestEdge="true"
+        app:indicatorGrowNearestEdge="false"
         app:tabIndicatorHorizontalPadding="10dp"
+        app:tabIndicatorSticky="true"
         app:tabMode="auto" />
 
     <com.google.android.material.tablayout2.TabLayout
@@ -106,7 +106,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tab_layout_3"
-        app:tabMode="scrollable" />
+        app:tabMode="auto" />
 
     <com.google.android.material.tablayout2.TabLayout
         android:id="@+id/tab_layout_5"
