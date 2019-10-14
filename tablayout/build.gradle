@@ -22,7 +22,7 @@ android {
         minSdkVersion MIN_SDK_VERSION as int
         targetSdkVersion TARGET_SDK_VERSION as int
         versionCode 1
-        versionName "4.0.0"
+        versionName "4.0.1"
 
     }
 
