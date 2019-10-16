@@ -11,7 +11,7 @@ def COMPILE_SDK_VERSION = hasProperty('COMPILE_SDK_VERSION') ? property('COMPILE
 def BUILD_TOOLS_VERSION = hasProperty('BUILD_TOOLS_VERSION') ? property('BUILD_TOOLS_VERSION') : getConfigProperty('BUILD_TOOLS_VERSION')
 def MIN_SDK_VERSION = hasProperty('MIN_SDK_VERSION') ? property('MIN_SDK_VERSION') : getConfigProperty('MIN_SDK_VERSION')
 def TARGET_SDK_VERSION = hasProperty('TARGET_SDK_VERSION') ? property('TARGET_SDK_VERSION') : getConfigProperty('TARGET_SDK_VERSION')
-def X_SUPPORT_VERSION = hasProperty('X_SUPPORT_VERSION') ? property('X_SUPPORT_VERSION') : getConfigProperty('X_SUPPORT_VERSION')
+def X_APPCOMPAT_VERSION = hasProperty('X_APPCOMPAT_VERSION') ? property('X_APPCOMPAT_VERSION') : getConfigProperty('X_APPCOMPAT_VERSION')
 
 
 android {
@@ -22,7 +22,7 @@ android {
         minSdkVersion MIN_SDK_VERSION as int
         targetSdkVersion TARGET_SDK_VERSION as int
         versionCode 1
-        versionName "4.0.1"
+        versionName "4.0.2"
 
     }
 
@@ -52,12 +52,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    compileOnly "androidx.appcompat:appcompat:$X_SUPPORT_VERSION"
-    compileOnly "androidx.viewpager:viewpager:1.0.0"
+    implementation "androidx.appcompat:appcompat:$X_APPCOMPAT_VERSION"
+    implementation "androidx.viewpager:viewpager:1.0.0"
     implementation "com.google.android.material:material:1.1.0-beta01"
-
-    implementation 'androidx.appcompat:appcompat:1.1.0'
 }
 
 //需要打包发布时 取消注释

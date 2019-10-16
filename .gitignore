@@ -14,3 +14,4 @@
 .idea/
 /nexus_scripts
 /jcenter_scripts
+/maven_publish

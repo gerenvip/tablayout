@@ -948,8 +948,9 @@ public class TabLayout extends HorizontalScrollView {
      * @param listener listener to add
      * @deprecated use {@link #addOnTabSelectedListener(OnTabSelectedListener)}
      */
+    @SuppressWarnings({"ConstantConditions"})
     @Deprecated
-    public void addOnTabSelectedListener(@Nullable BaseOnTabSelectedListener listener) {
+    public void addOnTabSelectedListener(@NonNull BaseOnTabSelectedListener listener) {
         addOnTabSelectedListener(wrapOnTabSelectedListener(listener));
     }
 
