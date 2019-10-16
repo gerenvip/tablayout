@@ -2,8 +2,13 @@
 [ ![Download](https://api.bintray.com/packages/gerenvip/maven/TabLayout/images/download.svg) ](https://bintray.com/gerenvip/maven/TabLayout/_latestVersion)
 
 [中文文档](https://github.com/gerenvip/tablayout/blob/master/README_CN.md)
+
+[Demo Apk](https://github.com/gerenvip/tablayout/blob/master/samples-debug.apk?raw=true)
+
 ## Introduction:
-Based on the `TabLayout` extension in `Google material`
+Based on the `TabLayout` extension in `Google material`  
+
+ ![](https://github.com/gerenvip/tablayout/blob/master/demo.gif?raw=true)
 
 #### The main function:
 

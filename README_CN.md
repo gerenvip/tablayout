@@ -1,8 +1,11 @@
 # TabLayout2  
 [ ![Download](https://api.bintray.com/packages/gerenvip/maven/TabLayout/images/download.svg) ](https://bintray.com/gerenvip/maven/TabLayout/_latestVersion)
 
+[Demo Apk](https://github.com/gerenvip/tablayout/blob/master/samples-debug.apk?raw=true)
 ## 简介:  
 基于 `Google Material` 中的 `TabLayout` 扩展   
+
+ ![](https://github.com/gerenvip/tablayout/blob/master/demo.gif?raw=true)
    
 #### 主要功能:  
 
