@@ -54,7 +54,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "androidx.appcompat:appcompat:$X_APPCOMPAT_VERSION"
     implementation "androidx.viewpager:viewpager:1.0.0"
-    implementation "com.google.android.material:material:1.1.0-beta01"
+    implementation "com.google.android.material:material:1.2.0-alpha02"
 }
 
 //需要打包发布时 取消注释
