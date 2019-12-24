@@ -26,6 +26,22 @@
                 <category android:name="android.intent.category.SAMPLE_CODE_ww" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".SampleVerticalTabLayout"
+            android:label="Tabs/SampleVerticalabLayout">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.SAMPLE_CODE_ww" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SampleTabLayoutPager2"
+            android:label="Tabs/SampleLayoutPager2">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.SAMPLE_CODE_ww" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

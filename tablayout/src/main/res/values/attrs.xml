@@ -121,6 +121,55 @@
         <!--固定每一个tab指示器的宽度, 仅在 tabIndicatorFullWidth 为 false 的情况下生效,
          建议 通过 tabIndicator 设置 一个 位图 使用-->
         <attr name="tabIndicatorFixedWidth" format="dimension" />
+
+
+        <!--for VerticalTablayout-->
+        <!-- VerticalTablayout 将该字段应用为指示器的宽度，对 TabLayout 无效 -->
+        <!-- {@deprecated Instead, set the intrinsic size of the custom drawable provided to the
+             tabIndicator attribute in order to change the indicator width. For example, this can be
+             done by setting the <size> property in a <shape> resource.} -->
+        <attr name="vTabIndicatorWidth" format="dimension" />
+        <!-- Whether the selection indicator width should fill the full height of the tab item,
+             or if it should be fitted to the content of the tab text label. If no text label is
+             present, it will be set to the width of the icon or to a minimum width of 24dp. -->
+        <attr name="vTabIndicatorFullHeight" format="boolean" />
+        <!--当 vTabIndicatorFullHeight 为 false，即 指示器的高度由内容的高度来决定 时
+      定义最小的指示器高度，默认是 24dp -->
+        <attr name="vMinIndicatorHeight" format="dimension" />
+        <!--固定每一个tab指示器的高度, 仅在 vTabIndicatorFullHeight 为 false 的情况下生效,
+         建议 通过 tabIndicator 设置 一个 位图 使用-->
+        <attr name="vTabIndicatorFixedHeight" format="dimension" />
+
+        <!-- Gravity constant for tab selection indicator. -->
+        <attr name="vTabIndicatorGravity" format="enum">
+            <!-- Align indicator to the right of this tab layout. -->
+            <enum name="right" value="0" />
+            <!-- Align indicator along the center of this tab layout. -->
+            <enum name="center" value="1" />
+            <!-- Align indicator to the left of this tab layout. -->
+            <enum name="left" value="2" />
+            <!-- Stretch indicator to match the height and width of a tab item in this layout. -->
+            <enum name="stretch" value="3" />
+            <!--紧贴 tab 内容右边界-->
+            <enum name="contentRight" value="4" />
+            <!--紧贴 tab 内容左边界-->
+            <enum name="contentLeft" value="5" />
+        </attr>
+
+        <!--指示器距所依赖的边间距, vTabIndicatorGravity 对应如下:
+         right -> 指示器距右边界的间距
+         center,left -> 指示器距左边界的间距
+         stretch -> 指示器距左边界和右边界的间距
+         contentRight -> 指示器距右边界的间距
+         contentLeft -> 指示器距左边界的间距
+         -->
+        <attr name="vTabIndicatorHorizontalPadding" format="dimension" />
+        <!--tab 的指示器 竖直方向上的padding, 仅在 vTabIndicatorFullHeight 为 false 的情况下生效 -->
+        <attr name="vTabIndicatorVerticalPadding" format="dimension" />
+        <!-- The minimum height for tabs. -->
+        <attr name="vTabMinHeight" format="dimension" />
+        <!-- The maximum height for tabs. -->
+        <attr name="vTabMaxHeight" format="dimension" />
     </declare-styleable>
 
 </resources>

@@ -22,7 +22,7 @@ android {
         minSdkVersion MIN_SDK_VERSION as int
         targetSdkVersion TARGET_SDK_VERSION as int
         versionCode 1
-        versionName "4.0.2"
+        versionName LIB_VERSION
 
     }
 
@@ -54,7 +54,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "androidx.appcompat:appcompat:$X_APPCOMPAT_VERSION"
     implementation "androidx.viewpager:viewpager:1.0.0"
-    implementation "com.google.android.material:material:1.2.0-alpha02"
+    implementation "com.google.android.material:material:$MATERIAL_VERSION"
 }
 
 //需要打包发布时 取消注释

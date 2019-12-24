@@ -7,9 +7,23 @@
 
     </style>
 
-    <style name="TabStyle" parent="Widget.MaterialComponents.TabLayout" >
+    <style name="TabStyle" parent="Widget.MaterialComponents.TabLayout">
         <item name="tabTextColor">@color/tabs_icon_color_selector</item>
         <item name="tabIndicatorColor">@color/colorAccent</item>
     </style>
 
+    <style name="VerticalTabLayout" parent="Base.Widget.Design.TabLayout">
+        <item name="tabGravity">fill</item>
+        <item name="tabMode">scrollable</item>
+        <item name="vTabIndicatorFullHeight">true</item>
+
+        <item name="vTabMaxHeight">@dimen/design_tab_max_height</item>
+        <item name="vTabIndicatorGravity">right</item>
+        <item name="tabIndicator">@drawable/vertical_mtrl_tabs_default_indicator</item>
+    </style>
+
+    <style name="VerticalTabStyle" parent="VerticalTabLayout">
+        <item name="tabTextColor">@color/tabs_icon_color_selector</item>
+        <item name="tabIndicatorColor">@color/colorAccent</item>
+    </style>
 </resources>
