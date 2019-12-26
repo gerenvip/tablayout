@@ -3353,7 +3353,11 @@ public class TabLayout extends HorizontalScrollView {
 
             if (startLeft != finalTargetLeft || startRight != finalTargetRight) {
                 ValueAnimator animator = indicatorAnimator = new ValueAnimator();
-                animator.setInterpolator(AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR);
+                if (tabIndicatorSticky){
+                  animator.setInterpolator(AnimationUtils.LINEAR_INTERPOLATOR);
+                }else {
+                  animator.setInterpolator(AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR);
+                }
                 animator.setDuration(duration);
                 animator.setFloatValues(0, 1);
                 animator.addUpdateListener(
@@ -3362,9 +3366,20 @@ public class TabLayout extends HorizontalScrollView {
                             @Override
                             public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
                                 final float fraction = valueAnimator.getAnimatedFraction();
+                                float leftFraction = fraction;
+                                float rightFraction = fraction;
+                                if (tabIndicatorSticky) {
+                                  leftFraction =  indicatorLeftInterpolator.getInterpolation(fraction);
+                                  rightFraction = indicatorRightInterpolator.getInterpolation(fraction);
+                                  if (finalTargetLeft < startLeft) {
+                                    float tmp = rightFraction;
+                                    rightFraction = leftFraction;
+                                    leftFraction = tmp;
+                                  }
+                                }
                                 setIndicatorPosition(
-                                        AnimationUtils.lerp(startLeft, finalTargetLeft, fraction),
-                                        AnimationUtils.lerp(startRight, finalTargetRight, fraction));
+                                        AnimationUtils.lerp(startLeft, finalTargetLeft, leftFraction),
+                                        AnimationUtils.lerp(startRight, finalTargetRight, rightFraction));
                             }
                         });
                 animator.addListener(
