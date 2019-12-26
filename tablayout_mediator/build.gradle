@@ -27,4 +27,4 @@ dependencies {
     implementation "androidx.viewpager2:viewpager2:$VIEWPAGER2_VERSION"
     implementation project(path: ':tablayout')
 }
-//apply from: "${rootProject.projectDir}/jcenter_scripts/bintrayUpload.gradle"
+apply from: "${rootProject.projectDir}/jcenter_scripts/bintrayUpload.gradle"
