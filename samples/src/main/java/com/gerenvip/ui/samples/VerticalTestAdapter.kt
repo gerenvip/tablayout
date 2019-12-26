@@ -11,7 +11,7 @@ class VerticalTestAdapter(fragmentActivity: FragmentActivity) : FragmentStateAda
     fragmentActivity
 ) {
     private val fragments: MutableList<TestFragment> = mutableListOf()
-    private val COUNT = 6
+    private val COUNT = 16
 
     init {
         fragments.clear()

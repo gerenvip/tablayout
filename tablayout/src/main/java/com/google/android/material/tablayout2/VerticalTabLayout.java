@@ -840,7 +840,7 @@ public class VerticalTabLayout extends ScrollView {
     if (scrollAnimator != null && scrollAnimator.isRunning()) {
       scrollAnimator.cancel();
     }
-    scrollTo(calculateScrollXForTab(position, positionOffset), 0);
+    scrollTo(0, calculateScrollYForTab(position, positionOffset));
 
     // Update the 'selected state' view as we scroll, if enabled
     if (updateSelectedText) {
@@ -1638,7 +1638,7 @@ public class VerticalTabLayout extends ScrollView {
 
   private int getTabScrollRange() {
     return Math.max(
-            0, slidingTabIndicator.getWidth() - getWidth() - getPaddingLeft() - getPaddingRight());
+            0, slidingTabIndicator.getHeight() - getHeight() - getPaddingTop() - getPaddingBottom());
   }
 
   void setPagerAdapter(@Nullable final PagerAdapter adapter, final boolean addObserver) {
@@ -1879,13 +1879,13 @@ public class VerticalTabLayout extends ScrollView {
       return;
     }
 
-    final int startScrollX = getScrollX();
-    final int targetScrollX = calculateScrollXForTab(newPosition, 0);
+    final int startScrollY = getScrollY();
+    final int targetScrollY = calculateScrollYForTab(newPosition, 0);
 
-    if (startScrollX != targetScrollX) {
+    if (startScrollY != targetScrollY) {
       ensureScrollAnimator();
 
-      scrollAnimator.setIntValues(startScrollX, targetScrollX);
+      scrollAnimator.setIntValues(startScrollY, targetScrollY);
       scrollAnimator.start();
     }
 
@@ -1902,7 +1902,7 @@ public class VerticalTabLayout extends ScrollView {
               new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(@NonNull ValueAnimator animator) {
-                  scrollTo((int) animator.getAnimatedValue(), 0);
+                  scrollTo(0, (int) animator.getAnimatedValue());
                 }
               });
     }
@@ -2020,24 +2020,22 @@ public class VerticalTabLayout extends ScrollView {
     }
   }
 
-  private int calculateScrollXForTab(int position, float positionOffset) {
+  private int calculateScrollYForTab(int position, float positionOffset) {
     if (mode == MODE_SCROLLABLE || mode == MODE_AUTO) {
       final View selectedChild = slidingTabIndicator.getChildAt(position);
       final View nextChild =
               position + 1 < slidingTabIndicator.getChildCount()
                       ? slidingTabIndicator.getChildAt(position + 1)
                       : null;
-      final int selectedWidth = selectedChild != null ? selectedChild.getWidth() : 0;
-      final int nextWidth = nextChild != null ? nextChild.getWidth() : 0;
+      final int selectedHeight = selectedChild != null ? selectedChild.getHeight() : 0;
+      final int nextHeight = nextChild != null ? nextChild.getHeight() : 0;
 
       // base scroll amount: places center of tab in center of parent
-      int scrollBase = selectedChild.getLeft() + (selectedWidth / 2) - (getWidth() / 2);
+      int scrollBase = selectedChild.getTop() + (selectedHeight / 2) - (getHeight() / 2);
       // offset amount: fraction of the distance between centers of tabs
-      int scrollOffset = (int) ((selectedWidth + nextWidth) * 0.5f * positionOffset);
+      int scrollOffset = (int) ((selectedHeight + nextHeight) * 0.5f * positionOffset);
 
-      return (ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_LTR)
-              ? scrollBase + scrollOffset
-              : scrollBase - scrollOffset;
+      return scrollBase + scrollOffset;
     }
     return 0;
   }
