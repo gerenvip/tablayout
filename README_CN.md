@@ -1,4 +1,4 @@
-# TabLayout2  
+# TabLayout + VerticalTabLayout   
 [ ![Download](https://api.bintray.com/packages/gerenvip/maven/TabLayout/images/download.svg) ](https://bintray.com/gerenvip/maven/TabLayout/_latestVersion)
 
 [Demo Apk](https://github.com/gerenvip/tablayout/blob/master/samples-debug.apk?raw=true)
