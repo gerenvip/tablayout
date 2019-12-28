@@ -7,6 +7,12 @@
 
     </style>
 
+    <!--红点需要 Theme.MaterialComponents 主题-->
+    <style name="BaseTheme.VerticalTabLayout" parent="Theme.MaterialComponents">
+        <item name="tabStyle">@style/VerticalTabStyle</item>
+
+    </style>
+
     <style name="TabStyle" parent="Widget.MaterialComponents.TabLayout">
         <item name="tabTextColor">@color/tabs_icon_color_selector</item>
         <item name="tabIndicatorColor">@color/colorAccent</item>

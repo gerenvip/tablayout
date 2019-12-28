@@ -9,6 +9,8 @@
         android:id="@+id/tab_layout"
         android:layout_width="64dp"
         android:layout_height="match_parent"
+        android:theme="@style/BaseTheme.VerticalTabLayout"
+        style="@style/VerticalTabStyle"
         app:layout_constraintLeft_toLeftOf="parent"
         app:tabGravity="center"
         app:tabIconTint="@color/tab_tint_colors"

@@ -31,6 +31,7 @@ class SampleVerticalTabLayout : AppCompatActivity() {
     private fun configTab() {
         VerticalTabLayoutMediator(tab_layout, view_pager) { tab, position ->
             tab.text = "Page-$position"
+            tab.orCreateBadge
         }.attach()
     }
 

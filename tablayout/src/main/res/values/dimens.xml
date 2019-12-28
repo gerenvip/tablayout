@@ -7,6 +7,6 @@
 
    <!--for VerticalTabLayout-->
     <dimen name="design_tab_max_height">264dp</dimen>
-    <dimen name="design_tab_scrollable_min_height">72dp</dimen>
+    <dimen name="design_tab_scrollable_min_height">64dp</dimen>
 
 </resources>
