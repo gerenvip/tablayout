@@ -122,6 +122,13 @@
          建议 通过 tabIndicator 设置 一个 位图 使用-->
         <attr name="tabIndicatorFixedWidth" format="dimension" />
 
+        <!-- 如果同时设置了 tabIndicator 和 tabIndicatorColor 是否用tabIndicatorColor 覆盖掉 tabIndicator drawable 的颜色
+        默认 true-->
+        <attr name="tintTabIndicator" format="boolean" />
+        <!-- 如果设置了 tabIndicator drawable，是否保持它的显示尺寸，不受其他变量的影响
+        默认false; 优先级高于 minIndicatorWidth，但低于 tabIndicatorFixedWidth-->
+        <attr name="retainTabIndicatorSize" format="boolean" />
+
 
         <!--for VerticalTablayout-->
         <!-- VerticalTablayout 将该字段应用为指示器的宽度，对 TabLayout 无效 -->

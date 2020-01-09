@@ -476,6 +476,8 @@ public class TabLayout extends HorizontalScrollView {
     private int tabIndicatorHorizontalPadding;
     private int tabIndicatorFixedWidth = -1;
     private Interpolator indicatorLeftInterpolator, indicatorRightInterpolator;
+    private boolean tintTabIndicator = true;
+    private boolean retainTabIndicatorSize = false;
 
     private final ArrayList<OnTabSelectedListener> selectedListeners = new ArrayList<>();
     @Nullable
@@ -627,6 +629,9 @@ public class TabLayout extends HorizontalScrollView {
         tabIndicatorHorizontalPadding = a.getDimensionPixelOffset(R.styleable.TabLayout_tabIndicatorHorizontalPadding, 0);
         tabIndicatorFixedWidth = a.getDimensionPixelOffset(R.styleable.TabLayout_tabIndicatorFixedWidth, -1);
 
+        tintTabIndicator = a.getBoolean(R.styleable.TabLayout_tintTabIndicator, true);
+        retainTabIndicatorSize = a.getBoolean(R.styleable.TabLayout_retainTabIndicatorSize, false);
+
         a.recycle();
 
         // TODO add attr for these
@@ -676,6 +681,34 @@ public class TabLayout extends HorizontalScrollView {
      */
     public int getTabIndicatorFixedWidth() {
         return tabIndicatorFixedWidth;
+    }
+
+    /**
+     * 如果设置了 tabIndicator drawable，是否保持它的显示尺寸，不受其他变量的影响
+     *         默认false
+     *  优先级高于 setMinIndicatorWidth，但低于 tabIndicatorFixedWidth
+     * @param retainTabIndicatorSize
+     */
+    public void setRetainTabIndicatorSize(boolean retainTabIndicatorSize) {
+        this.retainTabIndicatorSize = retainTabIndicatorSize;
+    }
+
+    public boolean isRetainTabIndicatorSize(){
+        return retainTabIndicatorSize;
+    }
+
+    /**
+     * 如果同时设置了 tabIndicator 和 tabIndicatorColor 是否用tabIndicatorColor 覆盖掉 tabIndicator drawable 的颜色
+     * 默认 true
+     *
+     * @param tintTabIndicator
+     */
+    public void setTintTabIndicator(boolean tintTabIndicator){
+        this.tintTabIndicator = tintTabIndicator;
+    }
+
+    public boolean isTintTabIndicator(){
+        return tintTabIndicator;
     }
 
     /**
@@ -3426,14 +3459,23 @@ public class TabLayout extends HorizontalScrollView {
             int contentTopBounds = tabViewVerticalCenter - (tabViewContentHeight / 2);
             int contentBottomBounds = tabViewVerticalCenter + (tabViewContentHeight / 2);
 
-            if (tabIndicatorFixedWidth > 0) {
-                int fixedWidth = tabIndicatorFixedWidth;
-                if (tabIndicatorFixedWidth > tabView.getWidth()) {
-                    fixedWidth = tabView.getWidth();
-                }
-                contentLeftBounds = tabViewCenter - fixedWidth / 2;
-                contentRightBounds = tabViewCenter + fixedWidth / 2;
+          if (tabIndicatorFixedWidth > 0) {
+            int fixedWidth = tabIndicatorFixedWidth;
+            if (tabIndicatorFixedWidth > tabView.getWidth()) {
+              fixedWidth = tabView.getWidth();
             }
+            contentLeftBounds = tabViewCenter - fixedWidth / 2;
+            contentRightBounds = tabViewCenter + fixedWidth / 2;
+          } else if (retainTabIndicatorSize && tabSelectedIndicator != null) {
+            int fixedWidth = tabSelectedIndicator.getIntrinsicWidth();
+            if (fixedWidth > 0) {//如果drawable 宽度是 0 ,不会保留
+              if (fixedWidth > tabView.getWidth()) {
+                fixedWidth = tabView.getWidth();
+              }
+              contentLeftBounds = tabViewCenter - fixedWidth / 2;
+              contentRightBounds = tabViewCenter + fixedWidth / 2;
+            }
+          }
 
             contentBounds.set(contentLeftBounds, contentTopBounds, contentRightBounds, contentBottomBounds);
         }
@@ -3498,7 +3540,7 @@ public class TabLayout extends HorizontalScrollView {
                         DrawableCompat.wrap(
                                 tabSelectedIndicator != null ? tabSelectedIndicator : defaultSelectionIndicator);
                 selectedIndicator.setBounds(indicatorLeft, indicatorTop, indicatorRight, indicatorBottom);
-                if (selectedIndicatorPaint != null) {
+                if (selectedIndicatorPaint != null && tintTabIndicator) {
                     if (VERSION.SDK_INT == VERSION_CODES.LOLLIPOP) {
                         // Drawable doesn't implement setTint in API 21
                         selectedIndicator.setColorFilter(

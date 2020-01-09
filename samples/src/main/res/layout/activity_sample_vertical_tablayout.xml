@@ -17,6 +17,9 @@
         app:tabIndicatorSticky="true"
         app:tabMode="scrollable"
         app:tabSelectedTextColor="#ff0000"
+        app:tintTabIndicator="false"
+        app:retainTabIndicatorSize="true"
+        app:tabIndicator="@drawable/custom_vertical_tab_indicator"
         app:vTabIndicatorFullHeight="false"
         app:vTabIndicatorGravity="contentRight"
         app:vTabIndicatorHorizontalPadding="0dp">

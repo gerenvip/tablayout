@@ -477,6 +477,8 @@ public class VerticalTabLayout extends ScrollView {
   private int tabIndicatorHorizontalPadding;
   private int tabIndicatorFixedHeight = -1;
   private Interpolator indicatorTopInterpolator, indicatorBottomInterpolator;
+  private boolean tintTabIndicator = true;
+  private boolean retainTabIndicatorSize = false;
 
   private final ArrayList<OnTabSelectedListener> selectedListeners = new ArrayList<>();
   @Nullable
@@ -628,6 +630,9 @@ public class VerticalTabLayout extends ScrollView {
     tabIndicatorHorizontalPadding = a.getDimensionPixelOffset(R.styleable.TabLayout_vTabIndicatorHorizontalPadding, 0);
     tabIndicatorFixedHeight = a.getDimensionPixelOffset(R.styleable.TabLayout_vTabIndicatorFixedHeight, -1);
 
+    tintTabIndicator = a.getBoolean(R.styleable.TabLayout_tintTabIndicator, true);
+    retainTabIndicatorSize = a.getBoolean(R.styleable.TabLayout_retainTabIndicatorSize, false);
+
     a.recycle();
 
     // TODO add attr for these
@@ -677,6 +682,35 @@ public class VerticalTabLayout extends ScrollView {
    */
   public int getTabIndicatorFixedHeight() {
     return tabIndicatorFixedHeight;
+  }
+
+  /**
+   * 如果设置了 tabIndicator drawable，是否保持它的显示尺寸，不受其他变量的影响
+   * 默认false
+   * 优先级高于 {@link #setMinIndicatorHeight(int)}，但低于 {@link #setTabIndicatorFixedHeight(int)}
+   *
+   * @param retainTabIndicatorSize
+   */
+  public void setRetainTabIndicatorSize(boolean retainTabIndicatorSize) {
+      this.retainTabIndicatorSize = retainTabIndicatorSize;
+  }
+
+  public boolean isRetainTabIndicatorSize() {
+      return retainTabIndicatorSize;
+  }
+
+  /**
+   * 如果同时设置了 tabIndicator 和 tabIndicatorColor 是否用tabIndicatorColor 覆盖掉 tabIndicator drawable 的颜色
+   * 默认 true
+   *
+   * @param tintTabIndicator
+   */
+  public void setTintTabIndicator(boolean tintTabIndicator) {
+      this.tintTabIndicator = tintTabIndicator;
+  }
+
+  public boolean isTintTabIndicator() {
+      return tintTabIndicator;
   }
 
   /**
@@ -3406,6 +3440,15 @@ public class VerticalTabLayout extends ScrollView {
         }
         contentTopBounds = tabViewCenter - fixedHeight / 2;
         contentBottomBounds = tabViewCenter + fixedHeight / 2;
+      } else if (retainTabIndicatorSize && tabSelectedIndicator != null) {
+        int fixedHeight = tabSelectedIndicator.getIntrinsicHeight();
+        if (fixedHeight > 0) {//如果drawable 宽度是 0 ,不会保留
+          if (fixedHeight > tabView.getHeight()) {
+            fixedHeight = tabView.getHeight();
+          }
+          contentTopBounds = tabViewCenter - fixedHeight / 2;
+          contentBottomBounds = tabViewCenter + fixedHeight / 2;
+        }
       }
 
       contentBounds.set(contentLeftBounds, contentTopBounds, contentRightBounds, contentBottomBounds);
@@ -3463,7 +3506,7 @@ public class VerticalTabLayout extends ScrollView {
                 DrawableCompat.wrap(
                         tabSelectedIndicator != null ? tabSelectedIndicator : defaultSelectionIndicator);
         selectedIndicator.setBounds(indicatorLeft, indicatorTop, indicatorRight, indicatorBottom);
-        if (selectedIndicatorPaint != null) {
+        if (selectedIndicatorPaint != null && tintTabIndicator) {
           if (VERSION.SDK_INT == VERSION_CODES.LOLLIPOP) {
             // Drawable doesn't implement setTint in API 21
             selectedIndicator.setColorFilter(
