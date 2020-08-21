@@ -16,6 +16,13 @@
 
 package com.google.android.material.tablayout2;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
@@ -92,13 +99,6 @@ import com.google.android.material.ripple.RippleUtils;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.MaterialShapeUtils;
 import com.google.android.material.tabs.TabItem;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_DRAGGING;
@@ -350,6 +350,9 @@ public class TabLayout extends HorizontalScrollView {
      */
     public static final int INDICATOR_GRAVITY_CONTENT_BOTTOM = 4;
 
+    /**
+     * 紧贴 tab 内容顶部
+     */
     public static final int INDICATOR_GRAVITY_CONTENT_TOP = 5;
 
     /**
@@ -367,6 +370,33 @@ public class TabLayout extends HorizontalScrollView {
             })
     @Retention(RetentionPolicy.SOURCE)
     public @interface TabIndicatorGravity {
+    }
+
+    /**
+     * 指示器居中对齐
+     */
+    public static final int INDICATOR_ALIGN_CENTER = 0;
+    /**
+     * 指示器居左对齐
+     */
+    public static final int INDICATOR_ALIGN_LEFT = 1;
+    /**
+     * 指示器居右对齐
+     */
+    public static final int INDICATOR_ALIGN_RIGHT = 2;
+
+    /**
+     * @hide
+     */
+    @RestrictTo(LIBRARY_GROUP)
+    @IntDef(
+            value = {
+                    INDICATOR_ALIGN_CENTER,
+                    INDICATOR_ALIGN_LEFT,
+                    INDICATOR_ALIGN_RIGHT
+            })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface TabIndicatorAlign{
     }
 
     /**
@@ -462,6 +492,8 @@ public class TabLayout extends HorizontalScrollView {
     int tabIndicatorAnimationDuration;
     @TabIndicatorGravity
     int tabIndicatorGravity;
+    @TabIndicatorAlign
+    int tabIndicatorAlign;
     @Mode
     int mode;
     boolean inlineLabel;
@@ -551,6 +583,8 @@ public class TabLayout extends HorizontalScrollView {
             setSelectedTabIndicatorGravity(
                     a.getInt(com.google.android.material.R.styleable.TabLayout_tabIndicatorGravity, INDICATOR_GRAVITY_BOTTOM));
         }
+        setSelectedTabIndicatorAlign(a.getInt(R.styleable.TabLayout_tabIndicatorAlign, INDICATOR_ALIGN_CENTER));
+
         setTabIndicatorFullWidth(a.getBoolean(com.google.android.material.R.styleable.TabLayout_tabIndicatorFullWidth, true));
 
         tabPaddingStart =
@@ -1258,6 +1292,23 @@ public class TabLayout extends HorizontalScrollView {
     @TabIndicatorGravity
     public int getTabIndicatorGravity() {
         return tabIndicatorGravity;
+    }
+
+    /**
+     * 设置 Indicator 的对齐方式
+     * @param indicatorAlign {@link TabIndicatorAlign}
+     * @attr ref R.styleable#TabLayout_tabIndicatorAlign
+     */
+    public void setSelectedTabIndicatorAlign(@TabIndicatorAlign int indicatorAlign) {
+        if (tabIndicatorAlign != indicatorAlign) {
+            tabIndicatorAlign = indicatorAlign;
+            ViewCompat.postInvalidateOnAnimation(slidingTabIndicator);
+        }
+    }
+
+    @TabIndicatorAlign
+    public int getTabIndicatorAlign() {
+        return tabIndicatorAlign;
     }
 
     /**
@@ -3287,10 +3338,12 @@ public class TabLayout extends HorizontalScrollView {
                 left = selectedTitle.getLeft();
                 right = selectedTitle.getRight();
 
-                if (!tabIndicatorFullWidth && selectedTitle instanceof TabView) {
+                if (selectedTitle instanceof TabView) {
                     calculateTabViewContentBounds((TabView) selectedTitle, tabViewContentBounds);
-                    left = (int) tabViewContentBounds.left;
-                    right = (int) tabViewContentBounds.right;
+                    if (!tabIndicatorFullWidth) {
+                        left = (int) tabViewContentBounds.left;
+                        right = (int) tabViewContentBounds.right;
+                    }
                 }
 
                 if (selectionOffset > 0f && selectedPosition < getChildCount() - 1) {
@@ -3299,10 +3352,12 @@ public class TabLayout extends HorizontalScrollView {
                     int nextTitleLeft = nextTitle.getLeft();
                     int nextTitleRight = nextTitle.getRight();
 
-                    if (!tabIndicatorFullWidth && nextTitle instanceof TabView) {
+                    if (nextTitle instanceof TabView) {
                         calculateTabViewContentBounds((TabView) nextTitle, tabViewContentBounds);
-                        nextTitleLeft = (int) tabViewContentBounds.left;
-                        nextTitleRight = (int) tabViewContentBounds.right;
+                        if (!tabIndicatorFullWidth) {
+                            nextTitleLeft = (int) tabViewContentBounds.left;
+                            nextTitleRight = (int) tabViewContentBounds.right;
+                        }
                     }
 
                     if (tabIndicatorSticky) {
@@ -3347,10 +3402,12 @@ public class TabLayout extends HorizontalScrollView {
             int targetLeft = targetView.getLeft();
             int targetRight = targetView.getRight();
 
-            if (!tabIndicatorFullWidth && targetView instanceof TabView) {
+            if (targetView instanceof TabView) {
                 calculateTabViewContentBounds((TabView) targetView, tabViewContentBounds);
-                targetLeft = (int) tabViewContentBounds.left;
-                targetRight = (int) tabViewContentBounds.right;
+                if (!tabIndicatorFullWidth) {
+                    targetLeft = (int) tabViewContentBounds.left;
+                    targetRight = (int) tabViewContentBounds.right;
+                }
             }
 
             final int finalTargetLeft = targetLeft;
@@ -3459,25 +3516,57 @@ public class TabLayout extends HorizontalScrollView {
             int contentTopBounds = tabViewVerticalCenter - (tabViewContentHeight / 2);
             int contentBottomBounds = tabViewVerticalCenter + (tabViewContentHeight / 2);
 
-          if (tabIndicatorFixedWidth > 0) {
-            int fixedWidth = tabIndicatorFixedWidth;
-            if (tabIndicatorFixedWidth > tabView.getWidth()) {
-              fixedWidth = tabView.getWidth();
+            int fixedWidth = 0;
+            if (tabIndicatorFixedWidth > 0) {
+                 fixedWidth = tabIndicatorFixedWidth;
+                if (tabIndicatorFixedWidth > tabView.getWidth()) {
+                    fixedWidth = tabView.getWidth();
+                }
+                contentLeftBounds = tabViewCenter - fixedWidth / 2;
+                contentRightBounds = tabViewCenter + fixedWidth / 2;
+            } else if (retainTabIndicatorSize && tabSelectedIndicator != null) {
+                 fixedWidth = tabSelectedIndicator.getIntrinsicWidth();
+                if (fixedWidth > 0) {//如果drawable 宽度是 0 ,不会保留
+                    if (fixedWidth > tabView.getWidth()) {
+                        fixedWidth = tabView.getWidth();
+                    }
+                    contentLeftBounds = tabViewCenter - fixedWidth / 2;
+                    contentRightBounds = tabViewCenter + fixedWidth / 2;
+                }
             }
-            contentLeftBounds = tabViewCenter - fixedWidth / 2;
-            contentRightBounds = tabViewCenter + fixedWidth / 2;
-          } else if (retainTabIndicatorSize && tabSelectedIndicator != null) {
-            int fixedWidth = tabSelectedIndicator.getIntrinsicWidth();
-            if (fixedWidth > 0) {//如果drawable 宽度是 0 ,不会保留
-              if (fixedWidth > tabView.getWidth()) {
-                fixedWidth = tabView.getWidth();
-              }
-              contentLeftBounds = tabViewCenter - fixedWidth / 2;
-              contentRightBounds = tabViewCenter + fixedWidth / 2;
-            }
-          }
 
             contentBounds.set(contentLeftBounds, contentTopBounds, contentRightBounds, contentBottomBounds);
+            if (fixedWidth > 0) {
+                adjustIndicatorAlign(fixedWidth, tabView, contentBounds);
+            }
+        }
+
+        /**
+         * 根据对齐方式调整
+         */
+        private void adjustIndicatorAlign(int fixedWidth, @NonNull TabView tabView, @NonNull RectF contentBounds) {
+            if (fixedWidth <= 0) {
+                return;
+            }
+            int contentLeftBound;
+            int contentRightBound;
+            switch (tabIndicatorAlign) {
+                case INDICATOR_ALIGN_LEFT:
+                    contentLeftBound = tabView.getLeft() + tabView.getPaddingLeft() + tabIndicatorHorizontalPadding / 2;
+                    contentRightBound = Math.min(contentLeftBound + fixedWidth, tabView.getRight() - tabView.getPaddingRight() - tabIndicatorHorizontalPadding / 2);
+                    contentBounds.left = contentLeftBound;
+                    contentBounds.right = contentRightBound;
+                    break;
+                case INDICATOR_ALIGN_RIGHT:
+                    contentRightBound = tabView.getRight() - tabView.getPaddingRight() - tabIndicatorHorizontalPadding / 2;
+                    contentLeftBound = Math.max(contentRightBound - fixedWidth, tabView.getLeft() + tabView.getPaddingLeft() + tabIndicatorHorizontalPadding / 2);
+                    contentBounds.left = contentLeftBound;
+                    contentBounds.right = contentRightBound;
+                    break;
+                case INDICATOR_ALIGN_CENTER:
+                default:
+                    break;
+            }
         }
 
         @Override

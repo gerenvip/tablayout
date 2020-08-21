@@ -131,7 +131,7 @@ class SampleTabLayout : AppCompatActivity() {
 //            tab?.setCustomView(R.layout.view_custom)
         }
         tab_layout_4.isTabIndicatorSticky = true
-        tab_layout_4.setIndicatorInterpolator(AccelerateInterpolator(), DecelerateInterpolator(1.25f))
+//        tab_layout_4.setIndicatorInterpolator(AccelerateInterpolator(), DecelerateInterpolator(1.25f))
     }
 
     private fun configTab5() {

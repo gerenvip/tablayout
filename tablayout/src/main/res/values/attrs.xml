@@ -99,7 +99,7 @@
          contentTop -> 指示器距顶部的间距
          -->
         <attr name="tabIndicatorVerticalPadding" format="dimension" />
-        <!--tab 的指示器 水平方向上的padding, 仅在 tabIndicatorFullWidth 为 false 的情况下生效 -->
+        <!--tab 的指示器 水平方向上的padding, 仅在 tabIndicatorFullWidth 为 false 的情况下生效; 左右offset 各是 padding 的一半 -->
         <attr name="tabIndicatorHorizontalPadding" format="dimension" />
 
         <!-- Gravity constant for tab selection indicator. -->
@@ -116,6 +116,38 @@
             <enum name="contentBottom" value="4" />
             <!--紧贴 tab 内容顶部-->
             <enum name="contentTop" value="5" />
+        </attr>
+
+        <!-- Indicator 的对齐 方式， 和tabIndicatorGravity2 配合使用 ；
+        需要indicator 有固定的宽度才生效，比如 设置tabIndicatorFixedWidth 或者 自定义 indicator drawable 并且设置 retainTabIndicatorSize = true -->
+        <attr name="tabIndicatorAlign" format="enum">
+            <!-- indicator 居中对齐，配合 tabIndicatorGravity2 情况：
+                bottom  底部居中
+                center  在 tabView 中间居中显示
+                top 顶部居中
+                stretch stretch 居中
+                contentBottom 在内容底部居中
+                contentTop 在内容顶部居中
+            -->
+            <enum name="center" value="0" />
+            <!-- indicator 居左对齐
+                bottom  底部居左
+                center  在 tabView 中间居左显示
+                top 顶部居左
+                stretch stretch 居左
+                contentBottom 在内容底部居左
+                contentTop 在内容顶部居左
+            -->
+            <enum name="left" value="1" />
+            <!-- indicator 居右对齐
+                bottom  底部居右
+                center  在 tabView 中间居右显示
+                top 顶部居右
+                stretch stretch 居右
+                contentBottom 在内容底部居右
+                contentTop 在内容顶部居右
+            -->
+            <enum name="right" value="2" />
         </attr>
 
         <!--固定每一个tab指示器的宽度, 仅在 tabIndicatorFullWidth 为 false 的情况下生效,
