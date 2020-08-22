@@ -76,7 +76,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.StringRes;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
@@ -203,6 +202,8 @@ public class TabLayout extends HorizontalScrollView {
     private static final int ANIMATION_DURATION = 300;
 
     private static final Pools.Pool<Tab> tabPool = new Pools.SynchronizedPool<>(16);
+
+    private static final String ACCESSIBILITY_CLASS_NAME = "androidx.appcompat.app.ActionBar.Tab";
 
     /**
      * Scrollable tabs display a subset of tabs at any given moment, and can contain longer tab labels
@@ -2682,7 +2683,7 @@ public class TabLayout extends HorizontalScrollView {
         public void onInitializeAccessibilityEvent(@NonNull AccessibilityEvent event) {
             super.onInitializeAccessibilityEvent(event);
             // This view masquerades as an action bar tab.
-            event.setClassName(ActionBar.Tab.class.getName());
+            event.setClassName(ACCESSIBILITY_CLASS_NAME);
         }
 
         @TargetApi(14)
@@ -2690,7 +2691,7 @@ public class TabLayout extends HorizontalScrollView {
         public void onInitializeAccessibilityNodeInfo(@NonNull AccessibilityNodeInfo info) {
             super.onInitializeAccessibilityNodeInfo(info);
             // This view masquerades as an action bar tab.
-            info.setClassName(ActionBar.Tab.class.getName());
+            info.setClassName(ACCESSIBILITY_CLASS_NAME);
             if (badgeDrawable != null && badgeDrawable.isVisible()) {
                 CharSequence customContentDescription = getContentDescription();
                 info.setContentDescription(
@@ -3177,8 +3178,8 @@ public class TabLayout extends HorizontalScrollView {
 
     private class SlidingTabIndicator extends LinearLayout {
         private int selectedIndicatorHeight;
-        @NonNull
-        private final Paint selectedIndicatorPaint;
+        @Nullable
+        private Paint selectedIndicatorPaint;
         @NonNull
         private final GradientDrawable defaultSelectionIndicator;
 
@@ -3200,6 +3201,13 @@ public class TabLayout extends HorizontalScrollView {
         }
 
         void setSelectedIndicatorColor(int color) {
+            if (color == Color.TRANSPARENT) {
+                selectedIndicatorPaint = null;
+                return;
+            }
+            if (selectedIndicatorPaint == null) {
+                selectedIndicatorPaint = new Paint();
+            }
             if (selectedIndicatorPaint.getColor() != color) {
                 selectedIndicatorPaint.setColor(color);
                 ViewCompat.postInvalidateOnAnimation(this);
