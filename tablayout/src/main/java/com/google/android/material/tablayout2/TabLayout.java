@@ -465,7 +465,7 @@ public class TabLayout extends HorizontalScrollView {
     private final RectF tabViewContentBounds = new RectF();
 
     @NonNull
-    private final SlidingTabIndicator slidingTabIndicator;
+    final SlidingTabIndicator slidingTabIndicator;
 
     int tabPaddingStart;
     int tabPaddingTop;
@@ -3202,7 +3202,7 @@ public class TabLayout extends HorizontalScrollView {
         }
     }
 
-    private class SlidingTabIndicator extends LinearLayout {
+    class SlidingTabIndicator extends LinearLayout {
         private int selectedIndicatorHeight;
         @Nullable
         private Paint selectedIndicatorPaint;
@@ -3214,10 +3214,12 @@ public class TabLayout extends HorizontalScrollView {
 
         private int layoutDirection = -1;
 
-        private int indicatorLeft = -1;
-        private int indicatorRight = -1;
+        int indicatorLeft = -1;
+        int indicatorRight = -1;
 
-        private ValueAnimator indicatorAnimator;
+        ValueAnimator indicatorAnimator;
+        private int animationStartLeft = -1;
+        private int animationStartRight = -1;
 
         SlidingTabIndicator(Context context) {
             super(context);
@@ -3350,13 +3352,12 @@ public class TabLayout extends HorizontalScrollView {
             super.onLayout(changed, l, t, r, b);
 
             if (indicatorAnimator != null && indicatorAnimator.isRunning()) {
-                // If we're currently running an animation, lets cancel it and start a
-                // new animation with the remaining duration
-                indicatorAnimator.cancel();
-                final long duration = indicatorAnimator.getDuration();
-                animateIndicatorToPosition(
-                        selectedPosition,
-                        Math.round((1f - indicatorAnimator.getAnimatedFraction()) * duration));
+                // It's possible that the tabs' layout is modified while the indicator is animating (ex. a
+                // new tab is added, or a tab is removed in onTabSelected). This would change the target end
+                // position of the indicator, since the tab widths are different. We need to modify the
+                // animation's updateListener to pick up the new target positions.
+                updateOrRecreateIndicatorAnimation(
+                        /* recreateAnimation= */ false, selectedPosition, /* duration= */ -1);
             } else {
                 // If we've been layed out, update the indicator position
                 updateIndicatorPosition();
@@ -3426,6 +3427,11 @@ public class TabLayout extends HorizontalScrollView {
                 indicatorAnimator.cancel();
             }
 
+            updateOrRecreateIndicatorAnimation(/* recreateAnimation= */ true, position, duration);
+        }
+
+        private void updateOrRecreateIndicatorAnimation(
+                boolean recreateAnimation, final int position, int duration) {
             final View targetView = getChildAt(position);
             if (targetView == null) {
                 // If we don't have a view, just update the position now and return
@@ -3436,78 +3442,59 @@ public class TabLayout extends HorizontalScrollView {
             int targetLeft = targetView.getLeft();
             int targetRight = targetView.getRight();
 
-            if (targetView instanceof TabView) {
+            if (!tabIndicatorFullWidth && targetView instanceof com.google.android.material.tabs.TabLayout.TabView) {
                 calculateTabViewContentBounds((TabView) targetView, tabViewContentBounds);
-                if (!tabIndicatorFullWidth) {
-                    targetLeft = (int) tabViewContentBounds.left;
-                    targetRight = (int) tabViewContentBounds.right;
-                }
+                targetLeft = (int) tabViewContentBounds.left;
+                targetRight = (int) tabViewContentBounds.right;
             }
 
+            // Where we want the indicator to end up after the animation finishes.
             final int finalTargetLeft = targetLeft;
             final int finalTargetRight = targetRight;
 
-            final int startLeft;
-            final int startRight;
+            // Where the indicator is currently.
+            final int startLeft = indicatorLeft;
+            final int startRight = indicatorRight;
 
-            //If the views are adjacent, we'll animate from edge-to-edge
-            if (Math.abs(position - selectedPosition) <= 1 || !indicatorGrowNearestEdge) {
-                startLeft = indicatorLeft;
-                startRight = indicatorRight;
-            } else {//Else, we'll just grow from the nearest edge
-                final boolean isRtl = ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL;
-
-                @SuppressLint("RestrictedApi") final int offset = (int) ViewUtils.dpToPx(getContext(), MOTION_NON_ADJACENT_OFFSET);
-                if (position < selectedPosition) {
-                    // We're going end-to-start
-                    if (isRtl) {
-                        startLeft = startRight = targetLeft - offset;
-                    } else {
-                        startLeft = startRight = targetRight + offset;
-                    }
-                } else {
-                    // We're going start-to-end
-                    if (isRtl) {
-                        startLeft = startRight = targetRight + offset;
-                    } else {
-                        startLeft = startRight = targetLeft - offset;
-                    }
-                }
+            // If we're already at the target position, do nothing.
+            if (startLeft == finalTargetLeft && startRight == finalTargetRight) {
+                return;
             }
 
-            if (startLeft != finalTargetLeft || startRight != finalTargetRight) {
+            // If we're going to recreate the animation, then we need to update our start positions. If
+            // we're not recreating, we reuse the start positions from the original animation.
+            if (recreateAnimation) {
+                animationStartLeft = startLeft;
+                animationStartRight = startRight;
+            }
+
+            // Create the update listener with the new target indicator positions. If we're not recreating
+            // then animationStartLeft/Right will be the same as when the previous animator was created.
+            ValueAnimator.AnimatorUpdateListener updateListener =
+                    new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
+                            final float fraction = valueAnimator.getAnimatedFraction();
+                            setIndicatorPosition(
+                                    AnimationUtils.lerp(animationStartLeft, finalTargetLeft, fraction),
+                                    AnimationUtils.lerp(animationStartRight, finalTargetRight, fraction));
+                        }
+                    };
+
+            if (recreateAnimation) {
+                // Create & start a new indicatorAnimator.
                 ValueAnimator animator = indicatorAnimator = new ValueAnimator();
-                if (tabIndicatorSticky){
-                  animator.setInterpolator(AnimationUtils.LINEAR_INTERPOLATOR);
-                }else {
-                  animator.setInterpolator(AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR);
-                }
+                animator.setInterpolator(AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR);
                 animator.setDuration(duration);
                 animator.setFloatValues(0, 1);
-                animator.addUpdateListener(
-                        new ValueAnimator.AnimatorUpdateListener() {
-                            @SuppressLint("RestrictedApi")
-                            @Override
-                            public void onAnimationUpdate(@NonNull ValueAnimator valueAnimator) {
-                                final float fraction = valueAnimator.getAnimatedFraction();
-                                float leftFraction = fraction;
-                                float rightFraction = fraction;
-                                if (tabIndicatorSticky) {
-                                  leftFraction =  indicatorLeftInterpolator.getInterpolation(fraction);
-                                  rightFraction = indicatorRightInterpolator.getInterpolation(fraction);
-                                  if (finalTargetLeft < startLeft) {
-                                    float tmp = rightFraction;
-                                    rightFraction = leftFraction;
-                                    leftFraction = tmp;
-                                  }
-                                }
-                                setIndicatorPosition(
-                                        AnimationUtils.lerp(startLeft, finalTargetLeft, leftFraction),
-                                        AnimationUtils.lerp(startRight, finalTargetRight, rightFraction));
-                            }
-                        });
+                animator.addUpdateListener(updateListener);
                 animator.addListener(
                         new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationStart(Animator animator) {
+                                selectedPosition = position;
+                            }
+
                             @Override
                             public void onAnimationEnd(Animator animator) {
                                 selectedPosition = position;
@@ -3515,6 +3502,10 @@ public class TabLayout extends HorizontalScrollView {
                             }
                         });
                 animator.start();
+            } else {
+                // Reuse the existing animator. Updating the listener only modifies the target positions.
+                indicatorAnimator.removeAllUpdateListeners();
+                indicatorAnimator.addUpdateListener(updateListener);
             }
         }
 
