@@ -415,6 +415,8 @@ public class TabLayout extends HorizontalScrollView {
 
     /**
      * Callback interface invoked when a tab's selection state changes.
+     *
+     * @deprecated Use {@link OnTabSelectedListener} instead.
      */
     public interface OnTabSelectedListener extends BaseOnTabSelectedListener<Tab> {}
 
@@ -846,10 +848,10 @@ public class TabLayout extends HorizontalScrollView {
     }
 
     /**
-     * Sets the tab indicator's height for the currently selected tab. This method is deprecated. If
-     * possible, set the intrinsic height directly on a custom indicator drawable passed to {@link
-     * #setSelectedTabIndicator(Drawable)}.
+     * Sets the tab indicator's height for the currently selected tab.
      *
+     * @deprecated If possible, set the intrinsic height directly on a custom indicator drawable
+     * passed to {@link #setSelectedTabIndicator(Drawable)}.
      * @param height height to use for the indicator in pixels
      * @attr ref com.google.android.material.R.styleable#TabLayout_tabIndicatorHeight
      */
