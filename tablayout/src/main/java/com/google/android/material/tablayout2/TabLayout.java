@@ -47,6 +47,7 @@ import android.os.Build.VERSION_CODES;
 import android.text.Layout;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -79,7 +80,6 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.util.Pools;
-import androidx.core.view.AccessibilityDelegateCompat;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MarginLayoutParamsCompat;
 import androidx.core.view.PointerIconCompat;
@@ -207,6 +207,8 @@ public class TabLayout extends HorizontalScrollView {
 
     private static final Pools.Pool<Tab> tabPool = new Pools.SynchronizedPool<>(16);
 
+    private static final String LOG_TAG = "TabLayout";
+
     private static final String ACCESSIBILITY_CLASS_NAME = "androidx.appcompat.app.ActionBar.Tab";
 
     /**
@@ -290,12 +292,20 @@ public class TabLayout extends HorizontalScrollView {
     public static final int GRAVITY_CENTER = 1;
 
     /**
+     * Gravity used to lay out the tabs aligned to the start of the {@link TabLayout}.
+     *
+     * @see #setTabGravity(int)
+     * @see #getTabGravity()
+     */
+    public static final int GRAVITY_START = 1 << 1;
+
+    /**
      * @hide
      */
     @RestrictTo(LIBRARY_GROUP)
     @IntDef(
             flag = true,
-            value = {GRAVITY_FILL, GRAVITY_CENTER})
+            value = {GRAVITY_FILL, GRAVITY_CENTER, GRAVITY_START})
     @Retention(RetentionPolicy.SOURCE)
     public @interface TabGravity {
     }
@@ -473,6 +483,7 @@ public class TabLayout extends HorizontalScrollView {
 
     private int contentInsetStart;
 
+    @TabGravity
     int tabGravity;
     int tabIndicatorAnimationDuration;
     @TabIndicatorGravity
@@ -1923,7 +1934,7 @@ public class TabLayout extends HorizontalScrollView {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         if (getChildCount() == 1) {
-            // If we're in fixed mode then we need to make the tab strip is the same width as us
+            // If we're in fixed mode then we need to make sure the tab strip is the same width as us
             // so we don't scroll
             final View child = getChildAt(0);
             boolean remeasure = false;
@@ -2157,11 +2168,30 @@ public class TabLayout extends HorizontalScrollView {
                 slidingTabIndicator.setGravity(Gravity.CENTER_HORIZONTAL);
                 break;
             case MODE_SCROLLABLE:
-                slidingTabIndicator.setGravity(GravityCompat.START);
+                applyGravityForModeScrollable(tabGravity);
                 break;
         }
 
         updateTabViews(true);
+    }
+
+    private void applyGravityForModeScrollable(int tabGravity) {
+        switch (tabGravity) {
+            case GRAVITY_CENTER:
+                slidingTabIndicator.setGravity(Gravity.CENTER_HORIZONTAL);
+                break;
+            case GRAVITY_FILL:
+                Log.w(
+                        LOG_TAG,
+                        "MODE_SCROLLABLE + GRAVITY_FILL is not supported, GRAVITY_START will be used"
+                                + " instead");
+                // Fall through
+            case GRAVITY_START:
+                slidingTabIndicator.setGravity(GravityCompat.START);
+                break;
+            default:
+                break;
+        }
     }
 
     void updateTabViews(final boolean requestLayout) {
