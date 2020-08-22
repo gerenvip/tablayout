@@ -3227,8 +3227,7 @@ public class TabLayout extends HorizontalScrollView {
 
     class SlidingTabIndicator extends LinearLayout {
         private int selectedIndicatorHeight;
-        @Nullable
-        private Paint selectedIndicatorPaint;
+        @Nullable private Paint selectedIndicatorPaint;
         @NonNull
         private final GradientDrawable defaultSelectionIndicator;
 
