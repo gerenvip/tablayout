@@ -27,7 +27,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
@@ -56,7 +55,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.accessibility.AccessibilityEvent;
-import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
@@ -80,10 +78,15 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.util.Pools;
+import androidx.core.view.AccessibilityDelegateCompat;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MarginLayoutParamsCompat;
 import androidx.core.view.PointerIconCompat;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.CollectionInfoCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.CollectionItemInfoCompat;
 import androidx.core.widget.TextViewCompat;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -676,6 +679,19 @@ public class TabLayout extends HorizontalScrollView {
 
         // Now apply the tab mode and gravity
         applyModeAndGravity();
+
+        ViewCompat.setAccessibilityDelegate(
+                this,
+                new AccessibilityDelegateCompat() {
+                    @Override
+                    public void onInitializeAccessibilityNodeInfo(
+                            View host, @NonNull AccessibilityNodeInfoCompat info) {
+                        super.onInitializeAccessibilityNodeInfo(host, info);
+                        info.setCollectionInfo(
+                                CollectionInfoCompat.obtain(
+                                        1, getTabCount(), false, AccessibilityNodeInfoCompat.CollectionInfoCompat.SELECTION_MODE_SINGLE));
+                    }
+                });
 
         indicatorLeftInterpolator = new IndicatorInterpolator(true);
         indicatorRightInterpolator = new IndicatorInterpolator(false);
@@ -2559,7 +2575,37 @@ public class TabLayout extends HorizontalScrollView {
             setClickable(true);
             ViewCompat.setPointerIcon(
                     this, PointerIconCompat.getSystemIcon(getContext(), PointerIconCompat.TYPE_HAND));
-            ViewCompat.setAccessibilityDelegate(this, null);
+            ViewCompat.setAccessibilityDelegate(
+                    this,
+                    new AccessibilityDelegateCompat() {
+                        @Override
+                        public void onInitializeAccessibilityNodeInfo(
+                                View host, @NonNull AccessibilityNodeInfoCompat info) {
+                            super.onInitializeAccessibilityNodeInfo(host, info);
+                            // This view masquerades as an action bar tab.
+                            info.setClassName(ACCESSIBILITY_CLASS_NAME);
+                            if (badgeDrawable != null && badgeDrawable.isVisible()) {
+                                CharSequence customContentDescription = getContentDescription();
+                                info.setContentDescription(
+                                        customContentDescription + ", " + badgeDrawable.getContentDescription());
+                            }
+                            info.setCollectionItemInfo(
+                                    CollectionItemInfoCompat.obtain(
+                                            0, 1, ((TabView) host).tab.getPosition(), 1, false, isSelected()));
+                            if (isSelected()) {
+                                info.setClickable(false);
+                                info.removeAction(AccessibilityActionCompat.ACTION_CLICK);
+                            }
+                        }
+
+                        @Override
+                        public void onInitializeAccessibilityEvent(
+                                View host, @NonNull AccessibilityEvent event) {
+                            super.onInitializeAccessibilityEvent(host, event);
+                            // This view masquerades as an action bar tab.
+                            event.setClassName(ACCESSIBILITY_CLASS_NAME);
+                        }
+                    });
         }
 
         @SuppressLint("RestrictedApi")
@@ -2676,26 +2722,6 @@ public class TabLayout extends HorizontalScrollView {
             }
             if (customView != null) {
                 customView.setSelected(selected);
-            }
-        }
-
-        @Override
-        public void onInitializeAccessibilityEvent(@NonNull AccessibilityEvent event) {
-            super.onInitializeAccessibilityEvent(event);
-            // This view masquerades as an action bar tab.
-            event.setClassName(ACCESSIBILITY_CLASS_NAME);
-        }
-
-        @TargetApi(14)
-        @Override
-        public void onInitializeAccessibilityNodeInfo(@NonNull AccessibilityNodeInfo info) {
-            super.onInitializeAccessibilityNodeInfo(info);
-            // This view masquerades as an action bar tab.
-            info.setClassName(ACCESSIBILITY_CLASS_NAME);
-            if (badgeDrawable != null && badgeDrawable.isVisible()) {
-                CharSequence customContentDescription = getContentDescription();
-                info.setContentDescription(
-                        customContentDescription + ", " + badgeDrawable.getContentDescription());
             }
         }
 
