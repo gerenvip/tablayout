@@ -407,32 +407,12 @@ public class TabLayout extends HorizontalScrollView {
     /**
      * Callback interface invoked when a tab's selection state changes.
      */
-    public interface OnTabSelectedListener {
-        /**
-         * Called when a tab enters the selected state.
-         *
-         * @param tab The tab that was selected
-         */
-        public void onTabSelected(Tab tab);
-
-        /**
-         * Called when a tab exits the selected state.
-         *
-         * @param tab The tab that was unselected
-         */
-        public void onTabUnselected(Tab tab);
-
-        /**
-         * Called when a tab that is already selected is chosen again by the user. Some applications may
-         * use this action to return to the top level of a category.
-         *
-         * @param tab The tab that was reselected.
-         */
-        public void onTabReselected(Tab tab);
-    }
+    public interface OnTabSelectedListener extends BaseOnTabSelectedListener<Tab> {}
 
     /**
      * Callback interface invoked when a tab's selection state changes.
+     *
+     * @deprecated Use {@link OnTabSelectedListener} instead.
      */
     @Deprecated
     public interface BaseOnTabSelectedListener<T extends Tab> {
@@ -515,6 +495,9 @@ public class TabLayout extends HorizontalScrollView {
     private Interpolator indicatorLeftInterpolator, indicatorRightInterpolator;
     private boolean tintTabIndicator = true;
     private boolean retainTabIndicatorSize = false;
+
+    @Nullable
+    private BaseOnTabSelectedListener selectedListener;
 
     private final ArrayList<OnTabSelectedListener> selectedListeners = new ArrayList<>();
     @Nullable
@@ -991,9 +974,27 @@ public class TabLayout extends HorizontalScrollView {
      * #removeOnTabSelectedListener(OnTabSelectedListener)}.
      */
     @Deprecated
+    public void setOnTabSelectedListener(@Nullable OnTabSelectedListener listener) {
+        setOnTabSelectedListener((BaseOnTabSelectedListener) listener);
+    }
+
+    /**
+     * @deprecated Use {@link #addOnTabSelectedListener(OnTabSelectedListener)} and {@link
+     * #removeOnTabSelectedListener(OnTabSelectedListener)}.
+     */
+    @Deprecated
     public void setOnTabSelectedListener(@Nullable BaseOnTabSelectedListener listener) {
-        clearOnTabSelectedListeners();
-        addOnTabSelectedListener(wrapOnTabSelectedListener(listener));
+        // The logic in this method emulates what we had before support for multiple
+        // registered listeners.
+        if (selectedListener != null) {
+            removeOnTabSelectedListener(selectedListener);
+        }
+        // Update the deprecated field so that we can remove the passed listener the next
+        // time we're called
+        selectedListener = listener;
+        if (listener != null) {
+            addOnTabSelectedListener(listener);
+        }
     }
 
     /**
