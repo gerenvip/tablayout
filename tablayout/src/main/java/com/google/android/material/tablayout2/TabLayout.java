@@ -105,6 +105,7 @@ import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_DRAGGING;
 import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_IDLE;
 import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_SETTLING;
+import static com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap;
 
 /**
  * TabLayout provides a horizontal layout to display tabs.
@@ -177,6 +178,8 @@ import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_SETTLING;
  */
 @ViewPager.DecorView
 public class TabLayout extends HorizontalScrollView {
+
+    private static final int DEF_STYLE_RES = R.style.Widget_Design_TabLayout;
 
     @Dimension(unit = Dimension.DP)
     private static final int DEFAULT_HEIGHT_WITH_TEXT_ICON = 72;
@@ -534,7 +537,9 @@ public class TabLayout extends HorizontalScrollView {
 
     @SuppressLint({"RestrictedApi", "PrivateResource"})
     public TabLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        super(wrap(context, attrs, defStyleAttr, DEF_STYLE_RES), attrs, defStyleAttr);
+        // Ensure we are using the correctly themed context rather than the context that was passed in.
+        context = getContext();
 
         // Disable the Scroll Bar
         setHorizontalScrollBarEnabled(false);
