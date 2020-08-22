@@ -25,11 +25,11 @@ class SampleTabLayout : AppCompatActivity() {
         mAdapter = TestAdapter(supportFragmentManager)
         view_pager.adapter = mAdapter
         view_pager.pageMargin = 36
-//        configTab1()
-//        configTab2()
-//        configTab3()
+        configTab1()
+        configTab2()
+        configTab3()
         configTab4()
-//        configTab5()
+        configTab5()
 //        configTab6()
 //        configTab7()
     }
