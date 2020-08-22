@@ -20,7 +20,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 
 import android.animation.Animator;
@@ -93,7 +92,6 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.gerenvip.ui.tabs.R;
-import com.google.android.material.animation.AnimationUtils;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.badge.BadgeUtils;
 import com.google.android.material.internal.ViewUtils;
@@ -208,8 +206,6 @@ public class TabLayout extends HorizontalScrollView {
     private static final Pools.Pool<Tab> tabPool = new Pools.SynchronizedPool<>(16);
 
     private static final String LOG_TAG = "TabLayout";
-
-    private static final String ACCESSIBILITY_CLASS_NAME = "androidx.appcompat.app.ActionBar.Tab";
 
     /**
      * Scrollable tabs display a subset of tabs at any given moment, and can contain longer tab labels
@@ -2687,8 +2683,6 @@ public class TabLayout extends HorizontalScrollView {
         @Override
         public void onInitializeAccessibilityNodeInfo(@NonNull AccessibilityNodeInfo info) {
             super.onInitializeAccessibilityNodeInfo(info);
-            // This view masquerades as an action bar tab.
-            info.setClassName(ACCESSIBILITY_CLASS_NAME);
             if (badgeDrawable != null && badgeDrawable.isVisible()) {
                 CharSequence customContentDescription = getContentDescription();
                 info.setContentDescription(
@@ -2707,13 +2701,7 @@ public class TabLayout extends HorizontalScrollView {
                 infoCompat.setClickable(false);
                 infoCompat.removeAction(AccessibilityActionCompat.ACTION_CLICK);
             }
-        }
-
-        @Override
-        public void onInitializeAccessibilityEvent(@NonNull AccessibilityEvent event) {
-            super.onInitializeAccessibilityEvent(event);
-            // This view masquerades as an action bar tab.
-            event.setClassName(ACCESSIBILITY_CLASS_NAME);
+            infoCompat.setRoleDescription("Tab");
         }
 
         @Override
