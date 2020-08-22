@@ -123,7 +123,7 @@ class SampleTabLayout : AppCompatActivity() {
     }
 
     private fun configTab4() {
-        tab_layout_4.tabMode = TabLayout.MODE_AUTO
+//        tab_layout_4.tabMode = TabLayout.MODE_AUTO
         tab_layout_4.setupWithViewPager(view_pager)
         val tabCount = tab_layout_4.tabCount
         for (i in 0 until tabCount) {
