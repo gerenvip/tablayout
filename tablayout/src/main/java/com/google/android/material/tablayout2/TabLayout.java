@@ -510,11 +510,9 @@ public class TabLayout extends HorizontalScrollView {
     @Nullable
     private BaseOnTabSelectedListener selectedListener;
 
-    private final ArrayList<OnTabSelectedListener> selectedListeners = new ArrayList<>();
+    private final ArrayList<BaseOnTabSelectedListener> selectedListeners = new ArrayList<>();
     @Nullable
-    private OnTabSelectedListener currentVpSelectedListener;
-    private final HashMap<BaseOnTabSelectedListener<? extends Tab>, OnTabSelectedListener>
-            selectedListenerMap = new HashMap<>();
+    private BaseOnTabSelectedListener currentVpSelectedListener;
 
     private ValueAnimator scrollAnimator;
 
@@ -1009,7 +1007,7 @@ public class TabLayout extends HorizontalScrollView {
     }
 
     /**
-     * Add a {@link TabLayout.OnTabSelectedListener} that will be invoked when tab selection changes.
+     * Add a {@link OnTabSelectedListener} that will be invoked when tab selection changes.
      *
      * <p>Components that add a listener should take care to remove it when finished via {@link
      * #removeOnTabSelectedListener(OnTabSelectedListener)}.
@@ -1017,13 +1015,11 @@ public class TabLayout extends HorizontalScrollView {
      * @param listener listener to add
      */
     public void addOnTabSelectedListener(@NonNull OnTabSelectedListener listener) {
-        if (!selectedListeners.contains(listener)) {
-            selectedListeners.add(listener);
-        }
+        addOnTabSelectedListener((BaseOnTabSelectedListener) listener);
     }
 
     /**
-     * Add a {@link TabLayout.BaseOnTabSelectedListener} that will be invoked when tab selection
+     * Add a {@link BaseOnTabSelectedListener} that will be invoked when tab selection
      * changes.
      *
      * <p>Components that add a listener should take care to remove it when finished via {@link
@@ -1032,24 +1028,25 @@ public class TabLayout extends HorizontalScrollView {
      * @param listener listener to add
      * @deprecated use {@link #addOnTabSelectedListener(OnTabSelectedListener)}
      */
-    @SuppressWarnings({"ConstantConditions"})
     @Deprecated
-    public void addOnTabSelectedListener(@NonNull BaseOnTabSelectedListener listener) {
-        addOnTabSelectedListener(wrapOnTabSelectedListener(listener));
+    public void addOnTabSelectedListener(@Nullable BaseOnTabSelectedListener listener) {
+        if (!selectedListeners.contains(listener)) {
+            selectedListeners.add(listener);
+        }
     }
 
     /**
-     * Remove the given {@link TabLayout.OnTabSelectedListener} that was previously added via {@link
+     * Remove the given {@link OnTabSelectedListener} that was previously added via {@link
      * #addOnTabSelectedListener(OnTabSelectedListener)}.
      *
      * @param listener listener to remove
      */
     public void removeOnTabSelectedListener(@NonNull OnTabSelectedListener listener) {
-        selectedListeners.remove(listener);
+        removeOnTabSelectedListener((BaseOnTabSelectedListener) listener);
     }
 
     /**
-     * Remove the given {@link TabLayout.BaseOnTabSelectedListener} that was previously added via
+     * Remove the given {@link BaseOnTabSelectedListener} that was previously added via
      * {@link #addOnTabSelectedListener(BaseOnTabSelectedListener)}.
      *
      * @param listener listener to remove
@@ -1057,52 +1054,14 @@ public class TabLayout extends HorizontalScrollView {
      */
     @Deprecated
     public void removeOnTabSelectedListener(@Nullable BaseOnTabSelectedListener listener) {
-        removeOnTabSelectedListener(wrapOnTabSelectedListener(listener));
+        selectedListeners.remove(listener);
     }
 
     /**
-     * @hide
-     */
-    @Nullable
-    @RestrictTo(LIBRARY_GROUP)
-    protected OnTabSelectedListener wrapOnTabSelectedListener(
-            @Nullable final BaseOnTabSelectedListener baseListener) {
-        if (baseListener == null) {
-            return null;
-        }
-
-        if (selectedListenerMap.containsKey(baseListener)) {
-            return selectedListenerMap.get(baseListener);
-        }
-
-        OnTabSelectedListener listener =
-                new OnTabSelectedListener() {
-                    @Override
-                    public void onTabSelected(Tab tab) {
-                        baseListener.onTabSelected(tab);
-                    }
-
-                    @Override
-                    public void onTabUnselected(Tab tab) {
-                        baseListener.onTabUnselected(tab);
-                    }
-
-                    @Override
-                    public void onTabReselected(Tab tab) {
-                        baseListener.onTabReselected(tab);
-                    }
-                };
-
-        selectedListenerMap.put(baseListener, listener);
-        return listener;
-    }
-
-    /**
-     * Remove all previously added {@link TabLayout.OnTabSelectedListener}s.
+     * Remove all previously added {@link OnTabSelectedListener}s.
      */
     public void clearOnTabSelectedListeners() {
         selectedListeners.clear();
-        selectedListenerMap.clear();
     }
 
     /**
