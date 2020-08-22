@@ -149,11 +149,17 @@ public final class TabLayoutMediator {
    */
   public void detach() {
     if (autoRefresh && adapter != null) {
-      adapter.unregisterAdapterDataObserver(pagerAdapterObserver);
+      if (pagerAdapterObserver != null) {
+        adapter.unregisterAdapterDataObserver(pagerAdapterObserver);
+      }
       pagerAdapterObserver = null;
     }
-    tabLayout.removeOnTabSelectedListener(onTabSelectedListener);
-    viewPager.unregisterOnPageChangeCallback(onPageChangeCallback);
+    if (onTabSelectedListener != null) {
+      tabLayout.removeOnTabSelectedListener(onTabSelectedListener);
+    }
+    if (onPageChangeCallback != null) {
+      viewPager.unregisterOnPageChangeCallback(onPageChangeCallback);
+    }
     onTabSelectedListener = null;
     onPageChangeCallback = null;
     adapter = null;
