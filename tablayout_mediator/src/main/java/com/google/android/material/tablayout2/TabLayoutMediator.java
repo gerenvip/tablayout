@@ -168,6 +168,7 @@ public final class TabLayoutMediator {
 
   /**
    * Returns whether the {@link TabLayout} and the {@link ViewPager2} are linked together.
+   * @return isAttached
    */
   public boolean isAttached() {
     return attached;
