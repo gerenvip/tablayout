@@ -6,8 +6,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 /**
- * @author wangwei on 2019-09-29.
- * wangwei11@kuaishou.com
+ * @author gerenvip.Wayne on 2019-09-29.
  */
 public interface ITabCustomView {
 

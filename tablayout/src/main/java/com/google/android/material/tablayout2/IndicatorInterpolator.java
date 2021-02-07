@@ -3,8 +3,7 @@ package com.google.android.material.tablayout2;
 import android.view.animation.Interpolator;
 
 /**
- * @author wangwei on 2019-10-13.
- * wangwei@jiandaola.com
+ * @author gerenvip.Wayne on 2019-10-13.
  */
 public class IndicatorInterpolator implements Interpolator {
 
