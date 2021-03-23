@@ -16,12 +16,6 @@
 
 package com.google.android.material.tablayout2;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
@@ -62,7 +56,6 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.BoolRes;
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
@@ -74,6 +67,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.RestrictTo;
+import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 import androidx.annotation.StringRes;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.TooltipCompat;
@@ -90,7 +84,9 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.CollectionIt
 import androidx.core.widget.TextViewCompat;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
+import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_DRAGGING;
+import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_IDLE;
+import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_SETTLING;
 import com.gerenvip.ui.tabs.R;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.badge.BadgeUtils;
@@ -100,12 +96,12 @@ import com.google.android.material.ripple.RippleUtils;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.MaterialShapeUtils;
 import com.google.android.material.tabs.TabItem;
-
-import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
-import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_DRAGGING;
-import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_IDLE;
-import static androidx.viewpager.widget.ViewPager.SCROLL_STATE_SETTLING;
 import static com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * TabLayout provides a horizontal layout to display tabs.
@@ -410,7 +406,7 @@ public class TabLayout extends HorizontalScrollView {
                     INDICATOR_ALIGN_RIGHT
             })
     @Retention(RetentionPolicy.SOURCE)
-    public @interface TabIndicatorAlign{
+    public @interface TabIndicatorAlign {
     }
 
     /**
@@ -418,7 +414,8 @@ public class TabLayout extends HorizontalScrollView {
      *
      * @deprecated Use {@link OnTabSelectedListener} instead.
      */
-    public interface OnTabSelectedListener extends BaseOnTabSelectedListener<Tab> {}
+    public interface OnTabSelectedListener extends BaseOnTabSelectedListener<Tab> {
+    }
 
     /**
      * Callback interface invoked when a tab's selection state changes.
@@ -719,15 +716,16 @@ public class TabLayout extends HorizontalScrollView {
 
     /**
      * 如果设置了 tabIndicator drawable，是否保持它的显示尺寸，不受其他变量的影响
-     *         默认false
-     *  优先级高于 setMinIndicatorWidth，但低于 tabIndicatorFixedWidth
+     * 默认false
+     * 优先级高于 setMinIndicatorWidth，但低于 tabIndicatorFixedWidth
+     *
      * @param retainTabIndicatorSize
      */
     public void setRetainTabIndicatorSize(boolean retainTabIndicatorSize) {
         this.retainTabIndicatorSize = retainTabIndicatorSize;
     }
 
-    public boolean isRetainTabIndicatorSize(){
+    public boolean isRetainTabIndicatorSize() {
         return retainTabIndicatorSize;
     }
 
@@ -737,11 +735,11 @@ public class TabLayout extends HorizontalScrollView {
      *
      * @param tintTabIndicator
      */
-    public void setTintTabIndicator(boolean tintTabIndicator){
+    public void setTintTabIndicator(boolean tintTabIndicator) {
         this.tintTabIndicator = tintTabIndicator;
     }
 
-    public boolean isTintTabIndicator(){
+    public boolean isTintTabIndicator() {
         return tintTabIndicator;
     }
 
@@ -850,10 +848,10 @@ public class TabLayout extends HorizontalScrollView {
     /**
      * Sets the tab indicator's height for the currently selected tab.
      *
-     * @deprecated If possible, set the intrinsic height directly on a custom indicator drawable
-     * passed to {@link #setSelectedTabIndicator(Drawable)}.
      * @param height height to use for the indicator in pixels
      * @attr ref com.google.android.material.R.styleable#TabLayout_tabIndicatorHeight
+     * @deprecated If possible, set the intrinsic height directly on a custom indicator drawable
+     * passed to {@link #setSelectedTabIndicator(Drawable)}.
      */
     @Deprecated
     public void setSelectedTabIndicatorHeight(int height) {
@@ -1278,6 +1276,7 @@ public class TabLayout extends HorizontalScrollView {
 
     /**
      * 设置 Indicator 的对齐方式
+     *
      * @param indicatorAlign {@link TabIndicatorAlign}
      * @attr ref R.styleable#TabLayout_tabIndicatorAlign
      */
@@ -3227,7 +3226,8 @@ public class TabLayout extends HorizontalScrollView {
 
     class SlidingTabIndicator extends LinearLayout {
         private int selectedIndicatorHeight;
-        @Nullable private Paint selectedIndicatorPaint;
+        @Nullable
+        private Paint selectedIndicatorPaint;
         @NonNull
         private final GradientDrawable defaultSelectionIndicator;
 
@@ -3565,14 +3565,14 @@ public class TabLayout extends HorizontalScrollView {
 
             int fixedWidth = 0;
             if (tabIndicatorFixedWidth > 0) {
-                 fixedWidth = tabIndicatorFixedWidth;
+                fixedWidth = tabIndicatorFixedWidth;
                 if (tabIndicatorFixedWidth > tabView.getWidth()) {
                     fixedWidth = tabView.getWidth();
                 }
                 contentLeftBounds = tabViewCenter - fixedWidth / 2;
                 contentRightBounds = tabViewCenter + fixedWidth / 2;
             } else if (retainTabIndicatorSize && tabSelectedIndicator != null) {
-                 fixedWidth = tabSelectedIndicator.getIntrinsicWidth();
+                fixedWidth = tabSelectedIndicator.getIntrinsicWidth();
                 if (fixedWidth > 0) {//如果drawable 宽度是 0 ,不会保留
                     if (fixedWidth > tabView.getWidth()) {
                         fixedWidth = tabView.getWidth();
@@ -3631,27 +3631,27 @@ public class TabLayout extends HorizontalScrollView {
 
             switch (tabIndicatorGravity) {
                 case INDICATOR_GRAVITY_BOTTOM:
-//          indicatorTop = getHeight() - indicatorHeight;
-//          indicatorBottom = getHeight();
+                    //          indicatorTop = getHeight() - indicatorHeight;
+                    //          indicatorBottom = getHeight();
                     int bottom = getHeight() - tabIndicatorVerticalPadding;
                     indicatorTop = bottom - indicatorHeight;
                     indicatorBottom = bottom;
                     break;
                 case INDICATOR_GRAVITY_CENTER:
-//          indicatorTop = (getHeight() - indicatorHeight) / 2;
-//          indicatorBottom = (getHeight() + indicatorHeight) / 2;
+                    //          indicatorTop = (getHeight() - indicatorHeight) / 2;
+                    //          indicatorBottom = (getHeight() + indicatorHeight) / 2;
                     indicatorTop = (getHeight() - indicatorHeight) / 2 + tabIndicatorVerticalPadding;
                     indicatorBottom = indicatorTop + indicatorHeight;
                     break;
                 case INDICATOR_GRAVITY_TOP:
-//          indicatorTop = 0;
-//          indicatorBottom = indicatorHeight;
+                    //          indicatorTop = 0;
+                    //          indicatorBottom = indicatorHeight;
                     indicatorTop = tabIndicatorVerticalPadding;
                     indicatorBottom = indicatorTop + indicatorHeight;
                     break;
                 case INDICATOR_GRAVITY_STRETCH:
-//          indicatorTop = 0;
-//          indicatorBottom = getHeight();
+                    //          indicatorTop = 0;
+                    //          indicatorBottom = getHeight();
                     indicatorTop = tabIndicatorVerticalPadding;
                     indicatorBottom = getHeight() - tabIndicatorVerticalPadding;
                     break;
@@ -3669,6 +3669,7 @@ public class TabLayout extends HorizontalScrollView {
                     break;
             }
 
+            canvas.save();
             // Draw the selection indicator on top of tab item backgrounds
             if (indicatorLeft >= 0 && indicatorRight > indicatorLeft) {
                 Drawable selectedIndicator;
@@ -3676,7 +3677,14 @@ public class TabLayout extends HorizontalScrollView {
                         DrawableCompat.wrap(
                                 tabSelectedIndicator != null ? tabSelectedIndicator : defaultSelectionIndicator)
                                 .mutate();
-                selectedIndicator.setBounds(indicatorLeft, indicatorTop, indicatorRight, indicatorBottom);
+                if (retainTabIndicatorSize) {
+                    selectedIndicator.setBounds(0, 0, tabSelectedIndicator.getIntrinsicWidth(), tabSelectedIndicator.getIntrinsicHeight());
+                    float left = indicatorLeft + (indicatorRight - indicatorLeft) / 2f - tabSelectedIndicator.getIntrinsicWidth() / 2f;
+                    float top = indicatorTop + (indicatorBottom - indicatorTop) / 2f - tabSelectedIndicator.getIntrinsicHeight() / 2f;
+                    canvas.translate(left, top);
+                } else {
+                    selectedIndicator.setBounds(indicatorLeft, indicatorTop, indicatorRight, indicatorBottom);
+                }
                 if (selectedIndicatorPaint != null && tintTabIndicator) {
                     if (VERSION.SDK_INT == VERSION_CODES.LOLLIPOP) {
                         // Drawable doesn't implement setTint in API 21
@@ -3688,6 +3696,7 @@ public class TabLayout extends HorizontalScrollView {
                 }
                 selectedIndicator.draw(canvas);
             }
+            canvas.restore();
 
             // Draw the tab item contents (icon and label) on top of the background + indicator layers
             super.draw(canvas);

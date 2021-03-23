@@ -18,8 +18,8 @@
         app:tabIconTint="@color/tab_tint_colors"
         app:tabIconTintMode="src_in"
         app:tabIndicatorHeight="0dp"
-        app:tabMode="fixed"
         app:tabInlineLabel="true"
+        app:tabMode="fixed"
         app:tabRippleColor="#22ff0000"
         app:tabSelectedTextColor="@color/colorPrimary">
 
@@ -52,8 +52,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tab_layout"
         app:tabGravity="center"
-        app:tabIndicatorHeight="0dp"
         app:tabIconTint="@color/tab_tint_colors"
+        app:tabIndicatorHeight="0dp"
         app:tabMode="fixed"
         app:tabSelectedTextColor="#ff0000">
 
@@ -78,40 +78,40 @@
     </com.google.android.material.tablayout2.TabLayout>
 
     <com.google.android.material.tablayout2.TabLayout
-        android:theme="@style/BaseTheme.TabLayout"
-        style="@style/TabStyle"
         android:id="@+id/tab_layout_3"
+        style="@style/TabStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#97FFFF"
-        app:tintTabIndicator="false"
-        app:retainTabIndicatorSize="true"
-        app:tabIndicator="@drawable/custom_tab_indicator"
+        android:theme="@style/BaseTheme.TabLayout"
+        app:indicatorGrowNearestEdge="true"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tab_layout_2"
-        app:tabIndicatorFullWidth="false"
         app:minIndicatorWidth="16dp"
-        app:tabIndicatorVerticalPadding="0dp"
-        app:indicatorGrowNearestEdge="true"
-        app:tabIndicatorHorizontalPadding="0dp"
-        app:tabIndicatorGravity2="contentBottom"
-        app:tabIndicatorSticky="true"
+        app:retainTabIndicatorSize="true"
+        app:tabIndicator="@drawable/custom_tab_indicator"
         app:tabIndicatorAlign="left"
-        app:tabMode="auto" />
+        app:tabIndicatorFullWidth="false"
+        app:tabIndicatorGravity2="contentBottom"
+        app:tabIndicatorHorizontalPadding="0dp"
+        app:tabIndicatorSticky="true"
+        app:tabIndicatorVerticalPadding="0dp"
+        app:tabMode="auto"
+        app:tintTabIndicator="false" />
 
     <com.google.android.material.tablayout2.TabLayout
         android:id="@+id/tab_layout_4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#C1FFC1"
-        app:tabGravity="center"
-        app:tabIndicatorFullWidth="false"
-        app:minIndicatorWidth="16dp"
-        app:tabIndicatorGravity2="contentBottom"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tab_layout_3"
+        app:minIndicatorWidth="16dp"
+        app:tabGravity="center"
+        app:tabIndicatorFullWidth="false"
+        app:tabIndicatorGravity2="contentBottom"
         app:tabMode="auto" />
 
     <com.google.android.material.tablayout2.TabLayout
@@ -137,9 +137,12 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tab_layout_5"
+        app:retainTabIndicatorSize="true"
         app:tabContentStart="0dp"
         app:tabGravity="center"
-        app:tabIconTint="#00000000"
+        app:tabIndicatorGravity2="contentBottom"
+        app:tabIndicator="@drawable/dot_indicator_white_rect"
+        app:tabIndicatorColor="#ff00ff"
         app:tabMode="scrollable" />
 
     <com.google.android.material.tablayout2.TabLayout

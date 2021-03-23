@@ -2,8 +2,6 @@ package com.gerenvip.ui.samples
 
 import android.graphics.Color
 import android.os.Bundle
-import android.view.animation.AccelerateInterpolator
-import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
@@ -30,8 +28,8 @@ class SampleTabLayout : AppCompatActivity() {
         configTab3()
         configTab4()
         configTab5()
-//        configTab6()
-//        configTab7()
+        configTab6()
+        configTab7()
     }
 
     /**
@@ -65,7 +63,6 @@ class SampleTabLayout : AppCompatActivity() {
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
-
         })
     }
 
@@ -91,7 +88,6 @@ class SampleTabLayout : AppCompatActivity() {
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
-
         })
     }
 
@@ -103,8 +99,8 @@ class SampleTabLayout : AppCompatActivity() {
         tab_layout_3.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 val position = tab.position
-                Toast.makeText(this@SampleTabLayout, "select pos=$position", Toast.LENGTH_SHORT).show()
-
+                Toast.makeText(this@SampleTabLayout, "select pos=$position", Toast.LENGTH_SHORT)
+                    .show()
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -112,26 +108,24 @@ class SampleTabLayout : AppCompatActivity() {
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
-
         })
         val tab = tab_layout_3.getTabAt(1)
         tab?.orCreateBadge
         tab?.badge?.backgroundColor = Color.RED
         tab?.badge?.number = 1
         tab?.badge?.badgeTextColor = Color.WHITE
-
     }
 
     private fun configTab4() {
-//        tab_layout_4.tabMode = TabLayout.MODE_AUTO
+        //        tab_layout_4.tabMode = TabLayout.MODE_AUTO
         tab_layout_4.setupWithViewPager(view_pager)
         val tabCount = tab_layout_4.tabCount
         for (i in 0 until tabCount) {
             val tab = tab_layout_4.getTabAt(i)
-//            tab?.setCustomView(R.layout.view_custom)
+            //            tab?.setCustomView(R.layout.view_custom)
         }
         tab_layout_4.isTabIndicatorSticky = true
-//        tab_layout_4.setIndicatorInterpolator(AccelerateInterpolator(), DecelerateInterpolator(1.25f))
+        //        tab_layout_4.setIndicatorInterpolator(AccelerateInterpolator(), DecelerateInterpolator(1.25f))
     }
 
     private fun configTab5() {
@@ -140,6 +134,8 @@ class SampleTabLayout : AppCompatActivity() {
 
     private fun configTab6() {
         tab_layout_6.setupWithViewPager(view_pager)
+        //        tab_layout_6.setSelectedTabIndicator(R.drawable.dot_indicator_white_rect)
+        //        tab_layout_6.isRetainTabIndicatorSize = true
     }
 
     private fun configTab7() {
@@ -150,8 +146,8 @@ class SampleTabLayout : AppCompatActivity() {
         var currentItem = view_pager.currentItem
         val count = view_pager.adapter!!.count
         currentItem = (currentItem + 1) % count
-//        view_pager.setCurrentItem(currentItem, true)
+        //        view_pager.setCurrentItem(currentItem, true)
         val tab = tab_layout_3.getTabAt(currentItem)
-        tab_layout_3.selectTab(tab,true,false)
+        tab_layout_3.selectTab(tab, true, false)
     }
 }
